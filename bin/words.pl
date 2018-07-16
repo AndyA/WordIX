@@ -20,21 +20,21 @@ use WordIX::Words;
 use constant DICT => file "ref/dict.txt";
 
 my @score = (
-  "T..words...T...words..T",            #
-  ".D...t...t...D.",                    #
-  "..D...words.words...D..",            #
-  "words..D...words...D..words",        #
-  "....D.....D....",                    #
-  ".t...t...t...t.",                    #
-  "..words...words.words...words..",    #
-  "T......D......T",                    #
-  "..words...words.words...words..",    #
-  ".t...t...t...t.",                    #
-  "....D.....D....",                    #
-  "words..D...words...D..words",        #
-  "..D...words.words...D..",            #
-  ".D...t...t...D.",                    #
-  "T..words...T...words..T",            #
+  "T..d...T...d..T",    #
+  ".D...t...t...D.",    #
+  "..D...d.d...D..",    #
+  "d..D...d...D..d",    #
+  "....D.....D....",    #
+  ".t...t...t...t.",    #
+  "..d...d.d...d..",    #
+  "T......D......T",    #
+  "..d...d.d...d..",    #
+  ".t...t...t...t.",    #
+  "....D.....D....",    #
+  "d..D...d...D..d",    #
+  "..D...d.d...D..",    #
+  ".D...t...t...D.",    #
+  "T..d...T...d..T",    #
 );
 
 my $board = WordIX::Board->new;
