@@ -19,6 +19,8 @@ has letter => (
 
 sub score { 0 }
 
+sub matching_letter { '*' }
+
 no Moose;
 __PACKAGE__->meta->make_immutable;
 

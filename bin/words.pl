@@ -11,6 +11,7 @@ use lib qw( lib );
 use JSON ();
 use List::Util qw( shuffle min max );
 use Path::Class;
+use WordIX::Board;
 use WordIX::Board::Tile;
 use WordIX::Board::WildTile;
 use WordIX::Rack;
@@ -20,10 +21,6 @@ use constant DICT => file "ref/dict.txt";
 
 my @words = DICT->slurp( chomp => 1 );
 my $d = WordIX::Words->new( words => \@words );
-#my $d = WordIX::Words->new( words => ["EXTEND", "DENTEX"] );
-
-print JSON->new->canonical->encode($d->trie);
-exit;
 
 my $rack = WordIX::Rack->new;
 
@@ -39,7 +36,14 @@ $rack->add(
 
 for ( 1 .. 2 ) {
   say "Finding words";
-  $d->find_words( $rack, sub { say $_[0] } );
+  $d->find_words(
+    $rack,
+    [(undef) x 15],
+    sub {
+      my $path = shift;
+      say join "", map { $_->letter } @$path;
+    }
+  );
 }
 
 # vim:ts=2:sw=2:sts=2:et:ft=perl

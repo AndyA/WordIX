@@ -66,27 +66,43 @@ sub _b_trie_level {
   return $out;
 }
 
-sub _walk_trie {
-  my ( $self, $cb, $trie, $path, @letters ) = @_;
+sub _find_words {
+  my ( $self, $cb, $trie, $path, $fixed, @tiles ) = @_;
 
-  $cb->( join "", @$path )
+  return unless defined $trie;
+  return unless @$fixed;
+
+  my ( $fix, @tail ) = @$fixed;
+
+  return $self->walk_trie(
+    $cb,
+    $trie->{ $fix->letter },
+    [@$path, $fix],
+    [@tail], @tiles
+  ) if defined $fix;
+
+  $cb->($path)
    if exists $trie->{"*"};
 
   my ( %seen, @pre );
-  while (@letters) {
-    my $lt = shift @letters;
-    if ( !$seen{$lt}++ && exists $trie->{$lt} ) {
-      $self->_walk_trie( $cb, $trie->{$lt}, [@$path, $lt], @pre, @letters );
+  while (@tiles) {
+    my $tile = shift @tiles;
+    my $ml   = $tile->matching_letter;
+    unless ( $seen{$ml}++ ) {
+      my @letter = $ml eq "*" ? ( "A" .. "Z" ) : ($ml);
+      for my $lt (@letter) {
+        $self->_find_words( $cb, $trie->{$lt}, [@$path, $tile],
+          [@tail], @pre, @tiles )
+         if exists $trie->{$lt};
+      }
     }
-    push @pre, $lt;
+    push @pre, $tile;
   }
 }
 
 sub find_words {
-  my ( $self, $rack, $cb ) = @_;
-  my @letters = sort map { $_->letter // "*" } $rack->tiles;
-  say join ", ", @letters;
-  $self->_walk_trie( $cb, $self->trie, [], @letters );
+  my ( $self, $rack, $fixed, $cb ) = @_;
+  $self->_find_words( $cb, $self->trie, [], $fixed, $rack->tiles );
 }
 
 no Moose;

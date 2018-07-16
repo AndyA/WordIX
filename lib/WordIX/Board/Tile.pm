@@ -24,6 +24,8 @@ has score => (
   required => 1,
 );
 
+sub matching_letter { shift->letter }
+
 no Moose;
 __PACKAGE__->meta->make_immutable;
 

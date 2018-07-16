@@ -29,7 +29,7 @@ has cells => (
 sub _b_cells {
   my $self  = shift;
   my $cells = [];
-  push @$cells, [(undex) x $self->width] for @$self->height;
+  push @$cells, [(undef) x $self->width] for @$self->height;
 }
 
 sub cell {
@@ -44,6 +44,12 @@ sub cell {
 
   $self->cells->[$y][$x] = shift;
   return $self;
+}
+
+sub used {
+  my $self = shift;
+  my @used = grep { defined } map { @$_ } @{ $self->cells };
+  return scalar @used;
 }
 
 no Moose;
