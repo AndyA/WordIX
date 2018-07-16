@@ -1,4 +1,4 @@
-package WordIX::Board::Tile;
+package WordIX::Tile;
 
 our $VERSION = "0.01";
 
@@ -8,7 +8,7 @@ use Moose;
 
 =head1 NAME
 
-WordIX::Board::Tile - A letter tile
+WordIX::Tile - A letter tile
 
 =cut
 

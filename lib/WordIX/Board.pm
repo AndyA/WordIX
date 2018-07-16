@@ -14,22 +14,38 @@ WordIX::Board - A word game board
 
 has ['width', 'height'] => (
   is       => "ro",
-  isa      => "Num",
+  isa      => "Int",
   required => 1,
   default  => 15
 );
 
+has startx => (
+  is      => "ro",
+  isa     => "Int",
+  lazy    => 1,
+  builder => '_b_startx'
+);
+
+has starty => (
+  is      => "ro",
+  isa     => "Int",
+  lazy    => 1,
+  builder => '_b_starty'
+);
+
 has cells => (
   is      => "ro",
-  isa     => "ArrayRef[ArrayRef[]]",
+  isa     => "ArrayRef[ArrayRef[Any]]",
   lazy    => 1,
   builder => "_b_cells"
 );
 
+sub _b_startx { int( shift->width / 2 ) }
+sub _b_starty { int( shift->height / 2 ) }
+
 sub _b_cells {
-  my $self  = shift;
-  my $cells = [];
-  push @$cells, [(undef) x $self->width] for @$self->height;
+  my $self = shift;
+  return [map { [(undef) x $self->width] } 1 .. $self->height];
 }
 
 sub cell {

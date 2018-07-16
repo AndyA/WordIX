@@ -5,8 +5,8 @@ use warnings;
 use Test::More;
 
 use WordIX::Rack;
-use WordIX::Board::Tile;
-use WordIX::Board::WildTile;
+use WordIX::Tile;
+use WordIX::WildTile;
 
 my $rack = WordIX::Rack->new;
 is $rack->size, 0, "empty rack";
@@ -14,14 +14,14 @@ ok !defined $rack->pick(0),  "empty (0) -> undef";
 ok !defined $rack->pick(10), "empty (10) -> undef";
 
 $rack->add(
-  WordIX::Board::Tile->new( letter => "C", score => 1 ),
-  WordIX::Board::Tile->new( letter => "A", score => 1 ),
-  WordIX::Board::WildTile->new(),
-  WordIX::Board::Tile->new( letter => "B", score => 1 ),
-  WordIX::Board::Tile->new( letter => "B", score => 1 ),
-  WordIX::Board::Tile->new( letter => "C", score => 1 ),
-  WordIX::Board::Tile->new( letter => "A", score => 1 ),
-  WordIX::Board::WildTile->new(),
+  WordIX::Tile->new( letter => "C", score => 1 ),
+  WordIX::Tile->new( letter => "A", score => 1 ),
+  WordIX::WildTile->new(),
+  WordIX::Tile->new( letter => "B", score => 1 ),
+  WordIX::Tile->new( letter => "B", score => 1 ),
+  WordIX::Tile->new( letter => "C", score => 1 ),
+  WordIX::Tile->new( letter => "A", score => 1 ),
+  WordIX::WildTile->new(),
 );
 
 is $rack->size, 8, "rack has 8 tiles";

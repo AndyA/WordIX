@@ -1,4 +1,4 @@
-package WordIX::Board::WildTile;
+package WordIX::WildTile;
 
 our $VERSION = "0.01";
 
@@ -8,7 +8,7 @@ use Moose;
 
 =head1 NAME
 
-WordIX::Board::WildTile - A blank tile
+WordIX::WildTile - A blank tile
 
 =cut
 

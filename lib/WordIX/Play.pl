@@ -34,8 +34,15 @@ sub _try_position {
   my ( $self, $cb, $x, $y, $dx, $dy, $cb ) = @_;
 
   my $board = $self->board;
+  my $used  = $board->used;
+
+  return
+      unless $used
+   || $x == $board->startx
+   || $y == $board->starty;
 
   my ( $ox, $oy ) = ( $x, $y );
+
   # Move back over any occupied cells
   while () {
     my ( $nx, $ny ) = ( $ox - $dx, $oy - $dy );
@@ -53,6 +60,14 @@ sub _try_position {
     $ox += $dx;
     $oy += $dy;
   }
+
+  $self->words->find_words(
+    $self->rack,
+    \@fixed,
+    sub {
+      my $path = shift;
+    }
+  );
 }
 
 sub try_position {
