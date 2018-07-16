@@ -18,6 +18,13 @@ has words => (
   required => 1
 );
 
+has trie => (
+  is      => "ro",
+  isa     => "HashRef",
+  lazy    => 1,
+  builder => "_b_trie",
+);
+
 has normalised => (
   is      => "ro",
   isa     => "HashRef",
@@ -32,37 +39,31 @@ has index => (
   builder => "_b_index",
 );
 
-sub _b_normalised {
-  my $self = shift;
-  my $norm = {};
-  for my $word ( @{ $self->words } ) {
-    my $nw = join "", sort { $a cmp $b } split //, $word;
-    $norm->{$nw} = $word;
-  }
-  return $norm;
+sub _b_trie {
+  my $self  = shift;
+  my $words = $self->words;
+  return $self->_b_trie_level( $self->words, 0, $#$words, 0 );
 }
 
-sub _b_index { [sort keys %{ shift->normalised }] }
+sub _b_trie_level {
+  my ( $self, $words, $lo, $hi, $rank ) = @_;
 
-sub _find {
-  my ( $self, $prefix ) = @_;
-  my $idx = $self->index;
-  my $lo  = 0;
-  my $hi  = @$idx;
-  while ( $lo <= $hi ) {
-    my $mid = int( ( $lo + $hi ) / 2 );
-    my $cmp = $idx->[$mid] cmp $prefix;
-    if ( $cmp < 0 ) {
-      $lo = $mid + 1;
-    }
-    elsif ( $cmp > 0 ) {
-      $hi = $mid - 1;
-    }
-    else {
-      return $mid;
-    }
+  my ( %nlo, %nhi );
+  for my $pos ( $lo .. $hi ) {
+    my $word = $words->[$pos] . "*";
+    next unless length $word > $rank;
+    my $lt = substr $word, $rank, 1;
+    $nlo{$lt} = $pos unless exists $nlo{$lt};
+    $nhi{$lt} = $pos;
   }
-  return $lo;
+
+  my $out = {};
+  for my $lt ( sort keys %nlo ) {
+    $out->{$lt}
+     = $self->_b_trie_level( $words, $nlo{$lt}, $nhi{$lt}, $rank + 1 );
+  }
+
+  return $out;
 }
 
 no Moose;

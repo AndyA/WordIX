@@ -8,9 +8,9 @@ use warnings;
 
 use lib qw( lib );
 
+use JSON ();
 use Path::Class;
 use WordIX::Words;
-use List::Util qw( shuffle min max );
 
 use constant DICT => file "ref/dict.txt";
 
@@ -20,4 +20,3 @@ my $d = WordIX::Words->new( words => \@words );
 my $trie = $d->trie;
 
 # vim:ts=2:sw=2:sts=2:et:ft=perl
-
