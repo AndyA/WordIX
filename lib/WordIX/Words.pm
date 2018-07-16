@@ -66,6 +66,29 @@ sub _b_trie_level {
   return $out;
 }
 
+sub _walk_trie {
+  my ( $self, $cb, $trie, $path, @letters ) = @_;
+
+  $cb->( join "", @$path )
+   if exists $trie->{"*"};
+
+  my ( %seen, @pre );
+  while (@letters) {
+    my $lt = shift @letters;
+    if ( !$seen{$lt}++ && exists $trie->{$lt} ) {
+      $self->_walk_trie( $cb, $trie->{$lt}, [@$path, $lt], @pre, @letters );
+    }
+    push @pre, $lt;
+  }
+}
+
+sub find_words {
+  my ( $self, $rack, $cb ) = @_;
+  my @letters = sort map { $_->letter // "*" } $rack->tiles;
+  say join ", ", @letters;
+  $self->_walk_trie( $cb, $self->trie, [], @letters );
+}
+
 no Moose;
 __PACKAGE__->meta->make_immutable;
 
