@@ -11,9 +11,7 @@ var app = express();
 
 app.use(bodyParser.json());
 
-//app.use(require("../webapp/lib/js/srv/views.js"));
-//app.use(require("../webapp/lib/js/srv/data.js"));
-//app.use(require("../webapp/lib/js/srv/hls-live-manifest.js"));
+app.use(require("../webapp/srv/js/views.js"));
 
 app.use(express.static(WEBROOT));
 

@@ -6,21 +6,11 @@ const merge = require('merge-deep');
 function getConfig() {
   const defaultConfig = {
     bs: {
-      proxy: "http://clp.bbcgenome.com"
+      proxy: "http://localhost:31792"
     }
   };
 
   const perHostConfig = {
-    hattie: {
-      bs: {
-        proxy: "http://clp.pike"
-      }
-    },
-    trout: {
-      bs: {
-        proxy: "http://clp2.pike"
-      }
-    }
   };
 
   const host = os.hostname();
