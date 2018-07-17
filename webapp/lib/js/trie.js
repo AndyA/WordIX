@@ -1,5 +1,3 @@
-const ALL_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
 export default class Trie {
   constructor(words) {
     this.words = words.slice(0);
@@ -56,7 +54,8 @@ export default class Trie {
       if (seen[letter]) continue;
       seen[letter] = true;
 
-      const letters = letter === "*" ? ALL_LETTERS : [letter];
+      const letters = letter === "*" ? Object.keys(nd)
+        .filter(lt => lt !== "*") : [letter];
       let nextBag = null;
 
       for (let lt of letters) {
