@@ -203,12 +203,12 @@ gulp.task("server:development", function() {
 
   gulp.watch([
     "bin/app.js",
-    "views/**/*.hbs", 
-    "webapp/lib/js/common/**/*.js",
-    "webapp/lib/js/hls/**/*.js",
-    "webapp/lib/js/srv/**/*.js"
+    "views/**/*.hbs",
+    "webapp/**/*.js",
   ], function() {
-    server.start.apply(server);
+    browserSync.reload();
+    server.start();
+    // server.start.apply(server);
   });
 
 });
