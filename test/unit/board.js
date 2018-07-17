@@ -4,9 +4,13 @@ var chai = require("chai");
 var expect = chai.expect;
 
 import Board from "../../webapp/lib/js/board.js";
+import {
+  Tile,
+  WildTile
+} from "../../webapp/lib/js/tile.js";
 
 describe("Board", () => {
-  describe("Simple board", () => {
+  describe("Empty board", () => {
     let board = new Board();
 
     it("should have the correct size", () => {
@@ -21,6 +25,26 @@ describe("Board", () => {
         .to.equal(0);
       expect(board.free)
         .to.equal(15 * 15);
+    });
+  });
+
+  describe("Non-empty board", () => {
+    let board = new Board();
+
+    board.cell(0, 0)
+      .tile = new Tile("X", 8);
+
+    board.cell(14, 14)
+      .tile = new Tile("A", 1);
+
+    board.cell(7, 7)
+      .tile = new WildTile();
+
+    it("should know it is empty", () => {
+      expect(board.used)
+        .to.equal(3);
+      expect(board.free)
+        .to.equal(15 * 15 - 3);
     });
   });
 });
