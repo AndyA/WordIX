@@ -78,10 +78,8 @@ export default class Trie {
   }
 
   match(bag, cellFunc, wordFunc) {
-    let sortedBag = bag.slice(0);
-    sortedBag.sort();
-    this._match(this.trie, "", 0,
-      sortedBag, cellFunc, wordFunc);
+    this._match(this.trie, "", 0, bag.slice(0)
+      .sort(), cellFunc, wordFunc);
   }
 
   valid(word) {
