@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = exports = {
-  webroot: "public",
+  webroot: "www",
   less: "webapp/app/**/*.less",
   less_libs: [
     "webapp/lib/less",
