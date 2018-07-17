@@ -31,7 +31,8 @@ export default class Trie {
   }
 
   get trie() {
-    this._trie = this._trie || this._trieLevel(0, this.words.length, 0);
+    this._trie = this._trie ||
+      this._trieLevel(0, this.words.length, 0);
     return this._trie;
   }
 
@@ -40,7 +41,8 @@ export default class Trie {
 
     const cell = cellFunc(pos);
     if (cell) {
-      this._match(nd[cell], path + cell, pos + 1, bag, cellFunc, wordFunc);
+      this._match(nd[cell], path + cell, pos + 1,
+        bag, cellFunc, wordFunc);
       return;
     }
 
@@ -69,8 +71,8 @@ export default class Trie {
           nextBag = bag.slice(0);
           nextBag.splice(lpos, 1);
         }
-        this._match(nextNode, path + lt, pos + 1, nextBag, cellFunc,
-          wordFunc);
+        this._match(nextNode, path + lt, pos + 1,
+          nextBag, cellFunc, wordFunc);
       }
     }
   }
@@ -78,7 +80,8 @@ export default class Trie {
   match(bag, cellFunc, wordFunc) {
     let sortedBag = bag.slice(0);
     sortedBag.sort();
-    this._match(this.trie, "", 0, sortedBag, cellFunc, wordFunc);
+    this._match(this.trie, "", 0,
+      sortedBag, cellFunc, wordFunc);
   }
 
   valid(word) {

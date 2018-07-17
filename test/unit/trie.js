@@ -65,8 +65,8 @@ describe("Trie", () => {
   describe("match", () => {
     it("should find the right words with no constraints", () => {
       let found = [];
-      trie.match("FLOATERS".split(""), pos => null, path => {
-        found.push(path);
+      trie.match("FLOATERS".split(""), pos => null, word => {
+        found.push(word);
       });
       expect(found)
         .to.deep.equal(["FLOAT", "FLOATER", "FLOATS"]);
@@ -74,8 +74,8 @@ describe("Trie", () => {
 
     it("should find the right words with wildcards", () => {
       let found = [];
-      trie.match("FL**TERS".split(""), pos => null, path => {
-        found.push(path);
+      trie.match("FL**TERS".split(""), pos => null, word => {
+        found.push(word);
       });
       expect(found)
         .to.deep.equal(["CAT", "CATS", "FLOAT", "FLOATER", "FLOATS"]);
@@ -89,8 +89,8 @@ describe("Trie", () => {
           case 3: return "A";
           default: return null;
         }
-      }, path => {
-        found.push(path);
+      }, word => {
+        found.push(word);
       });
       expect(found)
         .to.deep.equal(["FLOAT", "FLOATER", "FLOATS"]);
