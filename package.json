@@ -1,0 +1,107 @@
+{
+   "author" : "Andy Armstrong <andy@hexten.net>",
+   "babel" : {
+      "presets" : [
+         "env",
+         "react"
+      ]
+   },
+   "bugs" : {
+      "url" : "https://github.com/AndyA/WordIX/issues"
+   },
+   "dependencies" : {
+      "ansi-colors" : "^1.1.0",
+      "fancy-log" : "^1.3.2"
+   },
+   "description" : "The BBC Computer Literacy Project",
+   "devDependencies" : {
+      "babel-core" : "^6.26.3",
+      "babel-polyfill" : "^6.26.0",
+      "babel-preset-env" : "^1.6.1",
+      "babel-preset-react" : "^6.16.0",
+      "babelify" : "^7.3.0",
+      "bluebird" : "^3.5.1",
+      "bootstrap" : "^3.3.7",
+      "browser-sync" : "^2.23.7",
+      "browserify" : "^13.1.1",
+      "chai" : "^4.1.2",
+      "exorcist" : "^0.4.0",
+      "gulp" : "^3.9.1",
+      "gulp-define-module" : "^0.1.5",
+      "gulp-handlebars" : "^5.0.2",
+      "gulp-less" : "^3.3.0",
+      "gulp-mocha" : "^5.0.0",
+      "gulp-notify" : "^2.2.0",
+      "gulp-shell" : "^0.6.5",
+      "gulp-sourcemaps" : "^2.2.0",
+      "gulp-uglify" : "^2.0.0",
+      "jquery" : "^3.1.1",
+      "less-plugin-clean-css" : "^1.5.1",
+      "minimist" : "^1.2.0",
+      "moment" : "^2.22.2",
+      "promise-polyfill" : "^6.0.2",
+      "q" : "^1.5.0",
+      "react" : "^15.3.2",
+      "react-bootstrap" : "^0.30.6",
+      "react-dom" : "^15.3.2",
+      "react-router" : "^3.0.0",
+      "react-router-bootstrap" : "^0.23.1",
+      "spin" : "0.0.1",
+      "through2" : "^2.0.1",
+      "uglifyify" : "^4.0.3",
+      "underscore.string" : "^3.3.4",
+      "uri-js" : "^4.2.1",
+      "vinyl-source-stream" : "^1.1.0",
+      "vinyl-transform" : "^1.0.0",
+      "watchify" : "^3.9.0",
+      "yamljs" : "^0.3.0"
+   },
+   "esformatter" : {
+      "esformatter" : {
+         "allowShebang" : true
+      },
+      "indent" : {
+         "alignComments" : true,
+         "value" : "  "
+      },
+      "jsx" : {
+         "JSXExpressionsSingleLine" : true,
+         "alignWithFirstAttribute" : false,
+         "attrsOnSameLineAsTag" : false,
+         "closingTagOnNewLine" : false,
+         "firstAttributeOnSameLine" : true,
+         "formatJSX" : true,
+         "formatJSXExpressions" : true,
+         "htmlOptions" : {
+            "brace_style" : "collapse",
+            "indent_char" : " ",
+            "indent_size" : 2,
+            "max_preserve_newlines" : 2,
+            "preserve_newlines" : true
+         },
+         "maxAttrsOnTag" : 3,
+         "removeSpaceBeforeClosingJSX" : false,
+         "spaceInJSXExpressionContainers" : " "
+      },
+      "lineBreak" : {
+         "value" : "\n"
+      },
+      "plugins" : [
+         "esformatter-jsx"
+      ],
+      "root" : true,
+      "whiteSpace" : {
+         "removeTrailing" : 1,
+         "value" : " "
+      }
+   },
+   "license" : "ISC",
+   "main" : "index.js",
+   "name" : "WordIX",
+   "repository" : {
+      "type" : "git",
+      "url" : "git+https://github.com/AndyA/WordIX.git"
+   },
+   "scripts" : {},
+   "version" : "0.1.0"
+}
