@@ -36,18 +36,18 @@ export default class Trie {
     return this._trie;
   }
 
-  _match(nd, path, pos, bag, cellFunc, wordFunc) {
+  _match(nd, word, pos, bag, cellFunc, wordFunc) {
     if (!nd) return;
 
     const cell = cellFunc(pos);
     if (cell) {
-      this._match(nd[cell], path + cell, pos + 1,
+      this._match(nd[cell], word + cell, pos + 1,
         bag, cellFunc, wordFunc);
       return;
     }
 
     if (nd["*"])
-      wordFunc(path);
+      wordFunc(word);
 
     let seen = {};
     for (let lpos in bag) {
@@ -71,7 +71,7 @@ export default class Trie {
           nextBag = bag.slice(0);
           nextBag.splice(lpos, 1);
         }
-        this._match(nextNode, path + lt, pos + 1,
+        this._match(nextNode, word + lt, pos + 1,
           nextBag, cellFunc, wordFunc);
       }
     }
