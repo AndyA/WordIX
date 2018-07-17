@@ -59,7 +59,7 @@ export default class Trie {
 
       // Expand wildcard
       const letters = letter === "*" ? Object.keys(nd)
-        .filter(lt => lt !== "*") : [letter];
+        .filter(lt => lt !== "*").sort() : [letter];
 
       let nextBag = null; // lazily created
 
