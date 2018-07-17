@@ -17,4 +17,8 @@ export default class Bag {
   get size() {
     return this.tiles.length;
   }
+
+  add(...tiles) {
+    Array.prototype.push.apply(this.tiles, tiles);
+  }
 }
