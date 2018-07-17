@@ -45,22 +45,35 @@ sub _b_starty { int( shift->height / 2 ) }
 
 sub _b_cells {
   my $self = shift;
-  return [map { [(undef) x $self->width] } 1 .. $self->height];
+  return [
+    map { [( { tile => undef, multiplier => undef } ) x $self->width] }
+     1 .. $self->height
+  ];
 }
 
 sub cell {
-  my $self = shift;
-  my $x    = shift;
-  my $y    = shift;
+  my ( $self, $x, $y ) = @_;
 
   die "Cell X, Y out of range"
    if $x < 0 || $x >= $self->width || $y < 0 || $y >= $self->height;
 
-  return $self->cells->[$y][$x] unless @_;
+  return $self->cells->[$y][$x];
+}
 
-  $self->cells->[$y][$x] = shift;
+sub _alter {
+  my $self = shift;
+  my $kind = shift;
+  my $x    = shift;
+  my $y    = shift;
+
+  my $cell = $self->cell( $x, $y );
+  return $cell->{$kind} unless @_;
+  $cell->{$kind} = shift;
   return $self;
 }
+
+sub tile       { shift->_alter( "tile",       @_ ) }
+sub multiplier { shift->_alter( "multiplier", @_ ) }
 
 sub used {
   my $self = shift;

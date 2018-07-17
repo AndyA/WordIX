@@ -47,7 +47,7 @@ sub _try_position {
   while () {
     my ( $nx, $ny ) = ( $ox - $dx, $oy - $dy );
     last if $nx < 0 || $ny < 0;
-    last unless defined $board->cell( $nx, $ny );
+    last unless defined $board->tile( $nx, $ny );
     ( $ox, $oy ) = ( $nx, $ny );
   }
 
@@ -56,7 +56,7 @@ sub _try_position {
   # Find any fixed letters
   my @fixed = ();
   while ( $ox < $board->width && $oy < $board->height ) {
-    push @fixed, $board->cell( $ox, $oy );
+    push @fixed, $board->tile( $ox, $oy );
     $ox += $dx;
     $oy += $dy;
   }

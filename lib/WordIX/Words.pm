@@ -77,8 +77,15 @@ sub _find_words {
   return $self->walk_trie(
     $cb,
     $trie->{ $fix->letter },
-    [@$path, { tile => $fix, letter => $fix->letter, fixed => 1 }],
-    [@tail], @tiles
+    [ @$path,
+      { tile   => $fix,
+        letter => $fix->letter,
+        fixed  => 1,
+        score  => 0,
+      }
+    ],
+    [@tail],
+    @tiles
   ) if defined $fix;
 
   $cb->($path)
@@ -92,7 +99,7 @@ sub _find_words {
       my @letter = $ml eq "*" ? ( "A" .. "Z" ) : ($ml);
       for my $lt (@letter) {
         $self->_find_words( $cb, $trie->{$lt},
-          [@$path, { tile => $tile, letter => $lt }],
+          [@$path, { tile => $tile, letter => $lt, score => $tile->score }],
           [@tail], @pre, @tiles )
          if exists $trie->{$lt};
       }

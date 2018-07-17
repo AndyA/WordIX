@@ -91,7 +91,7 @@ my $words = WordIX::Words->new( words => \@words );
 
 show_board($board);
 
-exit;
+#exit;
 
 my $rack = WordIX::Rack->new;
 
@@ -123,7 +123,7 @@ sub show_board {
   say $rule;
   for my $y ( 0 .. $board->height - 1 ) {
     say join " | ", map { $_ ? $_->letter : " " }
-     map { $board->cell( $y, $_ ) } 0 .. $board->width - 1;
+     map { $board->tile( $y, $_ ) } 0 .. $board->width - 1;
     say $rule;
   }
 }
