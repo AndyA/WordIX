@@ -18,8 +18,7 @@ export default class Trie {
           prevLetter = letter;
         if (prevLetter !== letter) {
           trie[prevLetter] = this._trieLevel(prevPos, pos, rank + 1);
-          prevPos = pos;
-          prevLetter = letter;
+          [prevPos, prevLetter] = [pos, letter];
         }
       }
     }
