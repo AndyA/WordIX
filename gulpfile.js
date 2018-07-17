@@ -7,6 +7,7 @@ const log = require("fancy-log");
 const notify = require("gulp-notify");
 const uglify = require("gulp-uglify");
 const less = require("gulp-less");
+const gls = require("gulp-live-server");
 const cleanCSS = require("less-plugin-clean-css");
 const browserify = require("browserify");
 const source = require("vinyl-source-stream");
@@ -41,12 +42,6 @@ function flatten() {
   return out;
 }
 
-gulp.task("config", shell.task("./setup.sh"));
-
-gulp.task("watch-config", function() {
-  gulp.watch(["environments/config.master.yml"], ["config"]);
-});
-
 gulp.task("browser-sync", function() {
   browserSync.init(appConfig.bs);
 
@@ -74,9 +69,6 @@ gulp.task("less", function() {
     style: "compressed",
     paths: paths.less_libs,
     plugins: [cleanCSSPlugin],
-    modifyVars: {
-      "@taster-enable": config.taster.enable
-    }
   });
 
   l.on("error", function(e) {
@@ -200,8 +192,37 @@ gulp.task("browserify-dev", ["templates"], function() {
   return makeBundler(false, "dev");
 });
 
+gulp.task("server:development", function() {
+  const server = gls.new("bin/app.js", {
+    env: {
+      NODE_ENV: "development"
+    }
+  });
+
+  server.start();
+
+  gulp.watch([
+    "bin/app.js",
+    "views/**/*.hbs", 
+    "webapp/lib/js/common/**/*.js",
+    "webapp/lib/js/hls/**/*.js",
+    "webapp/lib/js/srv/**/*.js"
+  ], function() {
+    server.start.apply(server);
+  });
+
+});
+
 gulp.task("build", ["less", "browserify-live"]);
 gulp.task("make", ["less", "browserify-dev"]);
-gulp.task("watch", ["watchless", "watchtemplates", "watchify", "watch-config", "browser-sync"]);
+
+gulp.task("watch", [
+  "watchless",
+  "watchtemplates",
+  "watchify",
+  "browser-sync",
+  "server:development"
+]);
+
 gulp.task("test", ["unit"]);
 gulp.task("default", ["build"]);
