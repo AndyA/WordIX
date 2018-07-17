@@ -35,12 +35,12 @@ export default class Trie {
     return this._trie;
   }
 
-  _findWords(nd, path, pos, bag, cellFunc, wordFunc) {
+  _match(nd, path, pos, bag, cellFunc, wordFunc) {
     if (!nd) return;
 
     const cell = cellFunc(pos);
     if (cell) {
-      this._findWords(nd[cell], path + cell, pos + 1, bag, cellFunc, wordFunc);
+      this._match(nd[cell], path + cell, pos + 1, bag, cellFunc, wordFunc);
       return;
     }
 
@@ -51,12 +51,15 @@ export default class Trie {
     for (let lpos in bag) {
       const letter = bag[lpos];
 
+      // Only process each letter once
       if (seen[letter]) continue;
       seen[letter] = true;
 
+      // Expand wildcard
       const letters = letter === "*" ? Object.keys(nd)
         .filter(lt => lt !== "*") : [letter];
-      let nextBag = null;
+
+      let nextBag = null; // lazily created
 
       for (let lt of letters) {
         const nextNode = nd[lt];
@@ -66,15 +69,25 @@ export default class Trie {
           nextBag = bag.slice(0);
           nextBag.splice(lpos, 1);
         }
-        this._findWords(nextNode, path + lt, pos + 1, nextBag, cellFunc,
+        this._match(nextNode, path + lt, pos + 1, nextBag, cellFunc,
           wordFunc);
       }
     }
   }
 
-  findWords(bag, cellFunc, wordFunc) {
+  match(bag, cellFunc, wordFunc) {
     let sortedBag = bag.slice(0);
     sortedBag.sort();
-    this._findWords(this.trie, "", 0, sortedBag, cellFunc, wordFunc);
+    this._match(this.trie, "", 0, sortedBag, cellFunc, wordFunc);
+  }
+
+  valid(word) {
+    let nd = this.trie;
+    for (const lt of word) {
+      const nextNode = nd[lt];
+      if (!nextNode) return false;
+      nd = nextNode;
+    }
+    return !!nd["*"];
   }
 }
