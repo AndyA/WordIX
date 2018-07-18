@@ -1,13 +1,4 @@
-function shuffle(a) {
-  var j, x, i;
-  for (i = a.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * (i + 1));
-    x = a[i];
-    a[i] = a[j];
-    a[j] = x;
-  }
-  return a;
-}
+import _ from "lodash";
 
 export default class Bag {
   constructor(tiles) {
@@ -20,5 +11,14 @@ export default class Bag {
 
   add(...tiles) {
     Array.prototype.push.apply(this.tiles, tiles);
+  }
+
+  pull(idx) {
+    return _.pullAt(this.tiles, idx);
+  }
+
+  take(n) {
+    const idx = _.shuffle(_.range(this.size));
+    return this.pull(idx.slice(0, n));
   }
 }

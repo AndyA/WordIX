@@ -1,7 +1,9 @@
 "use strict";
 
-var chai = require("chai");
-var expect = chai.expect;
+const chai = require("chai");
+const expect = chai.expect;
+
+const math = require("mathjs");
 
 import Bag from "../../webapp/lib/js/bag.js";
 import {
@@ -131,12 +133,57 @@ function makeBag(tiles) {
 }
 
 describe("Bag", () => {
-  describe("basic", () => {
+  describe("size", () => {
     let bag = makeBag(tiles);
 
-    it("should contain the right number of tiles", ()=>{
-      expect(bag.size).to.equal(100);
+    it("should contain the right number of tiles", () => {
+      expect(bag.size)
+        .to.equal(100);
     });
 
+  });
+
+  describe("pull", () => {
+    let bag = makeBag(tiles);
+    const pick = [10, 3, 20, 11];
+    const want = pick.map(i => bag.tiles[i]);
+    const got = bag.pull(pick);
+
+    it("should be possible to pull tiles", () => {
+      expect(got)
+        .to.deep.equal(want);
+    });
+
+    it("should remove tiles from the bag", () => {
+      expect(bag.size)
+        .to.equal(100 - pick.length);
+    });
+  });
+
+  describe("take", () => {
+    let bag = makeBag(tiles);
+
+    // Mark the bag
+    for (let i in bag.tiles)
+      bag.tiles[i]._index = i;
+
+    const got = bag.take(20);
+    const gotIndex = got.map(x => x._index);
+
+    it("should be a random selection", () => {
+      const m = math.mean(gotIndex);
+      const s = math.std(gotIndex);
+      expect(s)
+        .to.be.above(15);
+      expect(m)
+        .to.be.above(bag.size / 3);
+      expect(m)
+        .to.be.below(bag.size * 2 / 3);
+
+    });
+    it("should remove tiles from the bag", () => {
+      expect(bag.size)
+        .to.equal(100 - got.length);
+    });
   });
 });
