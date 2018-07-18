@@ -1,10 +1,8 @@
 import Board from "./board";
 import Flipper from "./flipper";
 import Bag from "./bag";
-import {
-  Tile,
-  WildTile
-} from "./tile";
+
+const { Tile, WildTile } = require("./tile");
 
 const defaultRules = {
   tray: {
