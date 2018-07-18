@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 class Trie {
   constructor(words) {
     this.words = words.slice(0);
@@ -77,6 +79,10 @@ class Trie {
   }
 
   match(bag, cellFunc, wordFunc) {
+    if (_.isString(bag))
+      bag = bag.split("");
+    if (!wordFunc)
+      [wordFunc, cellFunc] = [cellFunc, x => null];
     this._match(this.root, "", 0, bag.slice(0)
       .sort(), cellFunc, wordFunc);
   }

@@ -65,7 +65,7 @@ describe("Trie", () => {
   describe("match", () => {
     it("should find the right words with no constraints", () => {
       let found = [];
-      trie.match("FLOATERS".split(""), pos => null, word => {
+      trie.match("FLOATERS", word => {
         found.push(word);
       });
       expect(found)
@@ -74,7 +74,7 @@ describe("Trie", () => {
 
     it("should find the right words with wildcards", () => {
       let found = [];
-      trie.match("FL**TERS".split(""), pos => null, word => {
+      trie.match("FL**TERS", word => {
         found.push(word);
       });
       expect(found)
@@ -83,11 +83,14 @@ describe("Trie", () => {
 
     it("should find the right words with constraints", () => {
       let found = [];
-      trie.match("FLTERS".split(""), pos => {
+      trie.match("FLTERS", pos => {
         switch (pos) {
-          case 2: return "O";
-          case 3: return "A";
-          default: return null;
+          case 2:
+            return "O";
+          case 3:
+            return "A";
+          default:
+            return null;
         }
       }, word => {
         found.push(word);
@@ -99,19 +102,23 @@ describe("Trie", () => {
 
   describe("valid", () => {
     it("should know CATHARSIS is valid", () => {
-      expect(trie.valid("CATHARSIS")).to.equal(true);
+      expect(trie.valid("CATHARSIS"))
+        .to.equal(true);
     });
 
     it("should know CATHARSI is invalid", () => {
-      expect(trie.valid("CATHARSI")).to.equal(false);
+      expect(trie.valid("CATHARSI"))
+        .to.equal(false);
     });
 
     it("should know CATHARSISE is invalid", () => {
-      expect(trie.valid("CATHARSISE")).to.equal(false);
+      expect(trie.valid("CATHARSISE"))
+        .to.equal(false);
     });
 
     it("should know CATHETER is invalid", () => {
-      expect(trie.valid("CATHETER")).to.equal(false);
+      expect(trie.valid("CATHETER"))
+        .to.equal(false);
     });
   });
 
