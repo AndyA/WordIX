@@ -162,6 +162,7 @@ describe("Bag", () => {
 
   describe("take", () => {
     let bag = makeBag(tiles);
+    const bagSize = bag.size;
 
     // Mark the bag
     for (let i in bag.tiles)
@@ -176,9 +177,9 @@ describe("Bag", () => {
       expect(s)
         .to.be.above(15);
       expect(m)
-        .to.be.above(bag.size / 3);
+        .to.be.above(bagSize / 3);
       expect(m)
-        .to.be.below(bag.size * 2 / 3);
+        .to.be.below(bagSize * 2 / 3);
 
     });
     it("should remove tiles from the bag", () => {

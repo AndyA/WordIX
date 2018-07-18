@@ -21,4 +21,9 @@ export default class Bag {
     const idx = _.shuffle(_.range(this.size));
     return this.pull(idx.slice(0, n));
   }
+
+  fillFrom(bag, n) {
+    const need = n - this.size;
+    this.add(bag.take(need));
+  }
 }
