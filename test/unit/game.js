@@ -23,4 +23,9 @@ describe("Game", () => {
     expect(game.players.length)
       .to.equal(2);
   });
+
+  it("should have filled their trays", () => {
+    expect(game.bag.size)
+      .to.equal(100 - 14);
+  });
 });
