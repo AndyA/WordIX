@@ -1,5 +1,9 @@
 const _ = require("lodash");
 
+const {
+  makeTile
+} = require("./tile");
+
 class Trie {
   constructor(words) {
     this.words = words.slice(0);
@@ -34,6 +38,14 @@ class Trie {
   get root() {
     return this._root = this._root ||
       this._trieLevel(0, this.words.length, 0);
+  }
+
+  _tiles(obj) {
+    if (_.isString(obj))
+      return this._tiles(obj.split(""));
+    if (!_.isArray(obj))
+      throw new Error("Need a string or an array");
+    return obj.map(makeTile);
   }
 
   _match(nd, path, pos, bag, cellFunc, wordFunc) {

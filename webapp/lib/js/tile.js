@@ -1,3 +1,5 @@
+const _ = require("lodash");
+
 class Tile {
   constructor(lt, sc) {
     this.lt = lt;
@@ -35,7 +37,19 @@ class WildTile {
   }
 }
 
+function makeTile(letter, score) {
+  if (letter === undefined || letter === null)
+    return;
+  if (_.isString(letter)) {
+    if (letter === "*")
+      return new WildTile();
+    return new Tile(letter, score);
+  }
+  return letter; // assume it's a tile
+}
+
 module.exports = {
   Tile,
-  WildTile
+  WildTile,
+  makeTile
 };
