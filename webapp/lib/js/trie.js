@@ -36,18 +36,22 @@ class Trie {
       this._trieLevel(0, this.words.length, 0);
   }
 
-  _match(nd, word, pos, bag, cellFunc, wordFunc) {
+  _match(nd, path, pos, bag, cellFunc, wordFunc) {
     if (!nd) return;
 
     const cell = cellFunc(pos);
     if (cell) {
-      this._match(nd[cell], word + cell, pos + 1,
+      this._match(nd[cell], [...path, {
+          letter: cell,
+          type: "fixed"
+        }], pos + 1,
         bag, cellFunc, wordFunc);
       return;
     }
 
     if (nd["*"])
-      wordFunc(word);
+      wordFunc(path.map(p => p.letter)
+        .join(""), path);
 
     let seen = {};
     for (let lpos in bag) {
@@ -72,7 +76,10 @@ class Trie {
           nextBag = bag.slice(0);
           nextBag.splice(lpos, 1);
         }
-        this._match(nextNode, word + lt, pos + 1,
+        this._match(nextNode, [...path, {
+            letter: lt,
+            type: letter === "*" ? "wild" : "picked"
+          }], pos + 1,
           nextBag, cellFunc, wordFunc);
       }
     }
@@ -83,7 +90,7 @@ class Trie {
       bag = bag.split("");
     if (!wordFunc)
       [wordFunc, cellFunc] = [cellFunc, x => null];
-    this._match(this.root, "", 0, bag.slice(0)
+    this._match(this.root, [], 0, bag.slice(0)
       .sort(), cellFunc, wordFunc);
   }
 
