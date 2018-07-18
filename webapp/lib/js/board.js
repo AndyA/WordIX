@@ -1,6 +1,6 @@
 class Cell {
   constructor(tile, rules) {
-    this.tile = tile;
+    this.tile = tile || null;
     this.rules = rules || [];
   }
 }
