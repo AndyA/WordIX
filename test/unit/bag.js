@@ -177,9 +177,9 @@ describe("Bag", () => {
       expect(s)
         .to.be.above(15);
       expect(m)
-        .to.be.above(bagSize / 3);
+        .to.be.above(bagSize / 4);
       expect(m)
-        .to.be.below(bagSize * 2 / 3);
+        .to.be.below(bagSize * 3 / 4);
 
     });
     it("should remove tiles from the bag", () => {

@@ -5,7 +5,7 @@ class Cell {
   }
 }
 
-export default class Board {
+class Board {
   constructor(opt) {
     Object.assign(this, {
       width: 15,
@@ -59,3 +59,5 @@ export default class Board {
         func(this.cell(x, y), x, y);
   }
 }
+
+module.exports = Board;

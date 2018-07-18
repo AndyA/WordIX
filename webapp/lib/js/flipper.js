@@ -1,4 +1,4 @@
-export default class Flipper {
+class Flipper {
   constructor(flips) {
     this.flips = flips || [];
   }
@@ -26,3 +26,5 @@ export default class Flipper {
   }
 
 }
+
+module.exports = Flipper;

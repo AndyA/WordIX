@@ -1,6 +1,6 @@
-import Board from "./board";
-import Flipper from "./flipper";
-import Bag from "./bag";
+const Board = require("./board")
+const Flipper = require("./flipper")
+const Bag = require("./bag")
 
 const { Tile, WildTile } = require("./tile");
 
@@ -112,7 +112,7 @@ const defaultRules = {
   }
 }
 
-export default class Rules {
+class Rules {
   constructor(rules) {
     this.rules = Object.assign({}, defaultRules, rules);
   }
@@ -185,5 +185,6 @@ export default class Rules {
 
     return new Bag(pile);
   }
-
 }
+
+module.exports = Rules;

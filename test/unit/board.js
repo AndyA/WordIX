@@ -3,7 +3,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-import Board from "../../webapp/lib/js/board.js";
+const Board = require("../../webapp/lib/js/board.js")
 import {
   Tile,
   WildTile

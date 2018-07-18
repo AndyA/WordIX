@@ -1,8 +1,8 @@
-import _ from "lodash";
+const _ = require("lodash")
 
-import Player from "./player";
+const Player = require("./player")
 
-export default class Game {
+class Game {
   constructor(opt) {
     Object.assign(this, {
       players: 2,
@@ -39,3 +39,5 @@ export default class Game {
       throw new Error("players must be a number or an array of players");
   }
 }
+
+module.exports = Game;

@@ -3,7 +3,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-import Trie from "../../webapp/lib/js/trie.js";
+const Trie = require("../../webapp/lib/js/trie.js")
 
 describe("Trie", () => {
   const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",

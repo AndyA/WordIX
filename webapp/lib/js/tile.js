@@ -1,4 +1,4 @@
-export class Tile {
+class Tile {
   constructor(lt, sc) {
     this.lt = lt;
     this.sc = sc;
@@ -17,7 +17,7 @@ export class Tile {
   }
 }
 
-export class WildTile {
+class WildTile {
   set letter(lt) {
     this.lt = lt;
   }
@@ -34,3 +34,8 @@ export class WildTile {
     return 0;
   }
 }
+
+module.exports = {
+  Tile,
+  WildTile
+};

@@ -1,8 +1,10 @@
-import Bag from "./bag";
+const Bag = require("./bag")
 
-export default class Player {
+class Player {
   constructor(opt) {
     Object.assign(this, {}, opt);
     this.tray = this.tray || new Bag();
   }
 }
+
+module.exports = Player;

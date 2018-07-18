@@ -3,7 +3,7 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-import { Tile, WildTile } from "../../webapp/lib/js/tile.js";
+const { Tile, WildTile } = require("../../webapp/lib/js/tile.js")
 
 describe("Tile", () => {
   const tileX = new Tile("X", 8);

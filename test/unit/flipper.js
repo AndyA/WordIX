@@ -3,7 +3,7 @@
 const chai = require("chai");
 const expect = chai.expect;
 
-import Flipper from "../../webapp/lib/js/flipper.js";
+const Flipper = require("../../webapp/lib/js/flipper.js")
 
 const width = 15;
 const height = 15;

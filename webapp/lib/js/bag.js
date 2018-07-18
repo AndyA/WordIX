@@ -1,6 +1,6 @@
-import _ from "lodash";
+const _ = require("lodash")
 
-export default class Bag {
+class Bag {
   constructor(tiles) {
     this.tiles = tiles || [];
   }
@@ -27,3 +27,5 @@ export default class Bag {
     this.add(bag.take(need));
   }
 }
+
+module.exports = Bag

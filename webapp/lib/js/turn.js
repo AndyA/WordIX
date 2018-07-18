@@ -1,2 +1,4 @@
-export default class Turn {
+class Turn {
 }
+
+module.exports = Turn;

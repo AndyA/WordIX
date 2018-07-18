@@ -1,4 +1,4 @@
-export default class Trie {
+class Trie {
   constructor(words) {
     this.words = words.slice(0);
     this.words.sort();
@@ -91,3 +91,5 @@ export default class Trie {
     return !!nd["*"];
   }
 }
+
+module.exports = Trie;

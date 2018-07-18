@@ -3,9 +3,9 @@
 const chai = require("chai");
 const expect = chai.expect;
 
-import Rules from "../../webapp/lib/js/rules.js";
-import Game from "../../webapp/lib/js/game.js";
-import Trie from "../../webapp/lib/js/trie.js";
+const Rules = require("../../webapp/lib/js/rules.js")
+const Game = require("../../webapp/lib/js/game.js")
+const Trie = require("../../webapp/lib/js/trie.js")
 
 describe("Game", () => {
   const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",

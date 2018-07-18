@@ -3,7 +3,7 @@
 const chai = require("chai");
 const expect = chai.expect;
 
-import Rules from "../../webapp/lib/js/rules.js";
+const Rules = require("../../webapp/lib/js/rules.js")
 import {
   Tile,
   WildTile
