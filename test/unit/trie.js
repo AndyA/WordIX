@@ -57,7 +57,7 @@ describe("Trie", () => {
     };
 
     it("should have a valid trie", () => {
-      expect(trie.trie)
+      expect(trie.root)
         .to.deep.equal(want);
     });
   });

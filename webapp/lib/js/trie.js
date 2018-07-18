@@ -8,7 +8,7 @@ export default class Trie {
     const words = this.words;
 
     let prevLetter, prevPos = lo,
-      trie = {};
+      nd = {};
 
     for (let pos = lo; pos < hi; pos++) {
       const word = this.words[pos];
@@ -17,22 +17,21 @@ export default class Trie {
         if (prevLetter === undefined)
           prevLetter = letter;
         if (prevLetter !== letter) {
-          trie[prevLetter] = this._trieLevel(prevPos, pos, rank + 1);
+          nd[prevLetter] = this._trieLevel(prevPos, pos, rank + 1);
           [prevPos, prevLetter] = [pos, letter];
         }
       }
     }
 
     if (prevLetter !== undefined)
-      trie[prevLetter] = this._trieLevel(prevPos, hi, rank + 1);
+      nd[prevLetter] = this._trieLevel(prevPos, hi, rank + 1);
 
-    return trie;
+    return nd;
   }
 
-  get trie() {
-    this._trie = this._trie ||
+  get root() {
+    return this._root = this._root ||
       this._trieLevel(0, this.words.length, 0);
-    return this._trie;
   }
 
   _match(nd, word, pos, bag, cellFunc, wordFunc) {
@@ -78,12 +77,12 @@ export default class Trie {
   }
 
   match(bag, cellFunc, wordFunc) {
-    this._match(this.trie, "", 0, bag.slice(0)
+    this._match(this.root, "", 0, bag.slice(0)
       .sort(), cellFunc, wordFunc);
   }
 
   valid(word) {
-    let nd = this.trie;
+    let nd = this.root;
     for (const lt of word) {
       const nextNode = nd[lt];
       if (!nextNode) return false;
