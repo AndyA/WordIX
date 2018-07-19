@@ -125,7 +125,6 @@ class Trie {
   match(bag, wordFunc, opt) {
     const o = opt || {};
     const tiles = this._tiles(bag);
-    // console.log(JSON.stringify({tiles}, null, 2));
 
     this._match(this.root, [], 0, tiles,
       this._cellFunc(o.cells), wordFunc);
