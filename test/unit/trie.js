@@ -71,10 +71,9 @@ describe("Trie", () => {
     });
 
     it("should find the right words with wildcards", () => {
-      const found = trie.matches("FL**TERS");
+      const found = trie.matches("**EFLRST");
       expect(found.map(x => x.word))
-        .to.deep.equal(["FLOAT", "FLOATER", "FLOATS", "CAT", "CATS"]);
-        // console.log(JSON.stringify(found, null, 2));
+        .to.deep.equal(["CAT", "CATS", "FLOAT", "FLOATER", "FLOATS"]);
     });
 
     it("should find the right words with constraints", () => {

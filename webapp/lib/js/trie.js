@@ -1,5 +1,7 @@
 const _ = require("lodash");
 
+const ArrayPicker = require("./array-picker");
+
 const {
   makeTile
 } = require("./tile");
@@ -63,13 +65,14 @@ class Trie {
     }
 
     // Got a match?
-    if (nd["*"])
+    if (nd["*"]) {
       wordFunc(path.map(p => p.letter)
         .join(""), path);
+    }
 
     // Check the bag
     let seen = {};
-    for (let bagPos in bag) {
+    for (let bagPos = 0; bagPos < bag.length; bagPos++) {
       const tile = bag[bagPos];
       const letter = tile.matchLetter;
 
@@ -122,6 +125,7 @@ class Trie {
   match(bag, wordFunc, opt) {
     const o = opt || {};
     const tiles = this._tiles(bag);
+    // console.log(JSON.stringify({tiles}, null, 2));
 
     this._match(this.root, [], 0, tiles,
       this._cellFunc(o.cells), wordFunc);
