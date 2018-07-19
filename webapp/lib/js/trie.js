@@ -56,8 +56,7 @@ class Trie {
     if (cell) {
       this._match(nd[cell.letter], [...path, {
           tile: cell,
-          letter: cell.letter,
-          bagPos: null
+          letter: cell.letter
         }], pos + 1,
         bag, cellFunc, wordFunc);
       return;
