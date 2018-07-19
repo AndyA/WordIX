@@ -124,8 +124,9 @@ class Trie {
 
   valid(word) {
     let nd = this.root;
-    for (const lt of word) {
-      const nextNode = nd[lt];
+    const tiles = this._tiles(word);
+    for (const tile of tiles) {
+      const nextNode = nd[tile.letter];
       if (!nextNode) return false;
       nd = nextNode;
     }
