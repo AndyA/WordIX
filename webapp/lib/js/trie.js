@@ -51,23 +51,28 @@ class Trie {
   _match(nd, path, pos, bag, cellFunc, wordFunc) {
     if (!nd) return;
 
-    const cell = cellFunc(pos);
+    // Got a fixed cell?
+    const cell = makeTile(cellFunc(pos));
     if (cell) {
-      this._match(nd[cell], [...path, {
-          letter: cell,
-          type: "fixed"
+      this._match(nd[cell.letter], [...path, {
+          tile: cell,
+          letter: cell.letter,
+          bagPos: null
         }], pos + 1,
         bag, cellFunc, wordFunc);
       return;
     }
 
+    // Got a match?
     if (nd["*"])
       wordFunc(path.map(p => p.letter)
         .join(""), path);
 
+    // Check the bag
     let seen = {};
     for (let bagPos in bag) {
-      const letter = bag[bagPos];
+      const tile = bag[bagPos];
+      const letter = tile.matchLetter;
 
       // Only process each letter once
       if (seen[letter]) continue;
@@ -89,21 +94,18 @@ class Trie {
           nextBag.splice(bagPos, 1);
         }
         this._match(nextNode, [...path, {
-            letter: lt,
-            type: letter === "*" ? "wild" : "picked"
-          }], pos + 1,
-          nextBag, cellFunc, wordFunc);
+          letter: lt,
+          tile,
+          bagPos
+        }], pos + 1, nextBag, cellFunc, wordFunc);
       }
     }
   }
 
   match(bag, cellFunc, wordFunc) {
-    if (_.isString(bag))
-      bag = bag.split("");
     if (!wordFunc)
-      [wordFunc, cellFunc] = [cellFunc, x => null];
-    this._match(this.root, [], 0, bag.slice(0)
-      .sort(), cellFunc, wordFunc);
+      return this.match(bag, x => null, cellFunc);
+    this._match(this.root, [], 0, this._tiles(bag), cellFunc, wordFunc);
   }
 
   valid(word) {

@@ -78,7 +78,7 @@ describe("Trie", () => {
         found.push(word);
       });
       expect(found)
-        .to.deep.equal(["CAT", "CATS", "FLOAT", "FLOATER", "FLOATS"]);
+        .to.deep.equal(["FLOAT", "FLOATER", "FLOATS", "CAT", "CATS"]);
     });
 
     it("should find the right words with constraints", () => {
