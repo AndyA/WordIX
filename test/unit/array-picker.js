@@ -46,12 +46,12 @@ function checkPick(original, idx, out, src) {
 
 function testPicker(count, func) {
   for (let tn = 0; tn < 10; tn++) {
-    const srcLength = 1 + Math.floor(Math.random() * 20);
+    const srcLength = 1 + Math.floor(Math.random() * 25);
     const pickLength = Math.floor(Math.random() * srcLength);
 
     let src = fillRange(srcLength);
     let original = src.slice(0);
-    let idx = shuffle(fillRange(pickLength));
+    let idx = shuffle(src.slice(0)).splice(0, pickLength);
 
     let out = func(src, idx);
 
@@ -64,6 +64,7 @@ describe("ArrayPicker", () => {
     testPicker(10, (src, idx) => {
       let pick = ArrayPicker.adjustIndex(idx);
       const rev = ArrayPicker.reverseIndex(pick);
+
       it("should be possible to reverse the index", () => {
         expect(rev).to.deep.equal(idx);
       });
