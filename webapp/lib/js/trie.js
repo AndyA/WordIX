@@ -45,7 +45,7 @@ class Trie {
       return this._tiles(obj.split(""));
     if (!_.isArray(obj))
       throw new Error("Need a string or an array");
-    return obj.map(makeTile);
+    return obj.map(x => makeTile(x));
   }
 
   _match(nd, path, pos, bag, cellFunc, wordFunc) {
@@ -102,9 +102,12 @@ class Trie {
   }
 
   _cellFunc(f) {
+    if (!f)
+      return x => null;
     if (_.isFunction(f))
       return f;
     const tiles = this._tiles(f);
+    // Default cellFunc indexes into tiles
     return x => {
       if (x < 0 || x >= tiles.length)
         return null;
@@ -115,11 +118,24 @@ class Trie {
     }
   }
 
-  match(bag, cellFunc, wordFunc) {
-    if (!wordFunc)
-      return this.match(bag, x => null, cellFunc);
-    this._match(this.root, [], 0, this._tiles(bag),
-      this._cellFunc(cellFunc), wordFunc);
+  // TODO how to handle board edge?
+  match(bag, wordFunc, opt) {
+    const o = opt || {};
+    const tiles = this._tiles(bag);
+
+    this._match(this.root, [], 0, tiles,
+      this._cellFunc(o.cells), wordFunc);
+  }
+
+  matches(bag, opt) {
+    var m = [];
+    this.match(bag, (word, path) => {
+      m.push({
+        word,
+        path
+      });
+    }, opt);
+    return m;
   }
 
   valid(word) {

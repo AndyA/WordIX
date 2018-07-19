@@ -63,39 +63,25 @@ describe("Trie", () => {
   });
 
   describe("match", () => {
+
     it("should find the right words with no constraints", () => {
-      let found = [];
-      trie.match("FLOATERS", word => {
-        found.push(word);
-      });
-      expect(found)
+      const found = trie.matches("FLOATERS");
+      expect(found.map(x => x.word))
         .to.deep.equal(["FLOAT", "FLOATER", "FLOATS"]);
     });
 
     it("should find the right words with wildcards", () => {
-      let found = [];
-      trie.match("FL**TERS", word => {
-        found.push(word);
-      });
-      expect(found)
+      const found = trie.matches("FL**TERS");
+      expect(found.map(x => x.word))
         .to.deep.equal(["FLOAT", "FLOATER", "FLOATS", "CAT", "CATS"]);
+        // console.log(JSON.stringify(found, null, 2));
     });
 
     it("should find the right words with constraints", () => {
-      let found = [];
-      trie.match("FLTERS", pos => {
-        switch (pos) {
-          case 2:
-            return "O";
-          case 3:
-            return "A";
-          default:
-            return null;
-        }
-      }, word => {
-        found.push(word);
+      const found = trie.matches("FLTERS", {
+        cells: "**OA"
       });
-      expect(found)
+      expect(found.map(x => x.word))
         .to.deep.equal(["FLOAT", "FLOATER", "FLOATS"]);
     });
   });
