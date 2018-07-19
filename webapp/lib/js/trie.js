@@ -66,8 +66,8 @@ class Trie {
         .join(""), path);
 
     let seen = {};
-    for (let lpos in bag) {
-      const letter = bag[lpos];
+    for (let bagPos in bag) {
+      const letter = bag[bagPos];
 
       // Only process each letter once
       if (seen[letter]) continue;
@@ -86,7 +86,7 @@ class Trie {
           continue;
         if (!nextBag) {
           nextBag = bag.slice(0);
-          nextBag.splice(lpos, 1);
+          nextBag.splice(bagPos, 1);
         }
         this._match(nextNode, [...path, {
             letter: lt,
