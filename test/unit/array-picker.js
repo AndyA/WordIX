@@ -3,7 +3,7 @@
 let chai = require("chai");
 let expect = chai.expect;
 
-import ArrayPicker from "../../webapp/lib/js/array-picker.js";
+const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
 
 function shuffle(a) {
   let j, x, i;
