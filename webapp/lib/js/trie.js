@@ -101,10 +101,25 @@ class Trie {
     }
   }
 
+  _cellFunc(f) {
+    if (_.isFunction(f))
+      return f;
+    const tiles = this._tiles(f);
+    return x => {
+      if (x < 0 || x >= tiles.length)
+        return null;
+      const tile = tiles[x];
+      if (tile && tile.matchLetter === "*")
+        return null;
+      return tile;
+    }
+  }
+
   match(bag, cellFunc, wordFunc) {
     if (!wordFunc)
       return this.match(bag, x => null, cellFunc);
-    this._match(this.root, [], 0, this._tiles(bag), cellFunc, wordFunc);
+    this._match(this.root, [], 0, this._tiles(bag),
+      this._cellFunc(cellFunc), wordFunc);
   }
 
   valid(word) {
