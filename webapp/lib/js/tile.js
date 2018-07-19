@@ -19,13 +19,9 @@ class Tile {
   }
 }
 
-class WildTile {
+class WildTile extends Tile {
   set letter(lt) {
     this.lt = lt;
-  }
-
-  get letter() {
-    return this.lt;
   }
 
   get matchLetter() {
