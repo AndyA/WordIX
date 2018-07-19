@@ -1,12 +1,12 @@
 "use strict";
 
-var chai = require("chai");
-var expect = chai.expect;
+let chai = require("chai");
+let expect = chai.expect;
 
 import ArrayPicker from "../../webapp/lib/js/array-picker.js";
 
 function shuffle(a) {
-  var j, x, i;
+  let j, x, i;
   for (i = a.length - 1; i > 0; i--) {
     j = Math.floor(Math.random() * (i + 1));
     x = a[i];
@@ -17,14 +17,14 @@ function shuffle(a) {
 }
 
 function fillRange(n) {
-  var a = [];
+  let a = [];
   while (a.length < n) a.push(a.length);
   return a;
 }
 
 function collect(src, pick) {
-  var out = [];
-  var p = pick.slice(0);
+  let out = [];
+  let p = pick.slice(0);
   while (p.length)
     out.push(...src.splice(p.shift(), 1));
   return out;
@@ -49,11 +49,11 @@ function testPicker(count, func) {
     const srcLength = 1 + Math.floor(Math.random() * 20);
     const pickLength = Math.floor(Math.random() * srcLength);
 
-    var src = fillRange(srcLength);
-    var original = src.slice(0);
-    var idx = shuffle(fillRange(pickLength));
+    let src = fillRange(srcLength);
+    let original = src.slice(0);
+    let idx = shuffle(fillRange(pickLength));
 
-    var out = func(src, idx);
+    let out = func(src, idx);
 
     checkPick(original, idx, out, src);
   }
@@ -62,13 +62,18 @@ function testPicker(count, func) {
 describe("ArrayPicker", () => {
   describe("adjustIndex", () => {
     testPicker(10, (src, idx) => {
-      var pick = ArrayPicker.adjustIndex(idx);
+      let pick = ArrayPicker.adjustIndex(idx);
+      const rev = ArrayPicker.reverseIndex(pick);
+      it("should be possible to reverse the index", () => {
+        expect(rev).to.deep.equal(idx);
+      });
+
       return collect(src, pick);
     });
   });
   describe("multiSplice", () => {
     testPicker(10, (src, idx) => {
-      var pick = ArrayPicker.adjustIndex(idx);
+      let pick = ArrayPicker.adjustIndex(idx);
       return ArrayPicker.multiSplice(src, pick);
     });
   });
