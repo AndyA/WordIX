@@ -4,6 +4,7 @@ var chai = require("chai");
 var expect = chai.expect;
 
 const Trie = require("../../webapp/lib/js/trie.js")
+const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
 
 describe("Trie", () => {
   const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",
@@ -62,26 +63,84 @@ describe("Trie", () => {
     });
   });
 
-  describe("match", () => {
+  describe("matches", () => {
 
-    it("should find the right words with no constraints", () => {
-      const found = trie.matches("FLOATERS");
-      expect(found.map(x => x.word))
-        .to.deep.equal(["FLOAT", "FLOATER", "FLOATS"]);
-    });
+    function groupWords(found) {
+      let byWord = {};
+      for (const w of found) {
+        const word = w.word;
+        byWord[word] = byWord[word] || [];
+        byWord[word].push(w);
+      }
+      return byWord;
+    }
 
-    it("should find the right words with wildcards", () => {
-      const found = trie.matches("**EFLRST");
-      expect(found.map(x => x.word))
-        .to.deep.equal(["CAT", "CATS", "FLOAT", "FLOATER", "FLOATS"]);
-    });
+    function testMatches(bag, opt, words) {
+      let sortedWords = words.slice(0)
+        .sort();
+      let found = trie.matches(bag, opt)
+        .sort((a, b) => a.word.localeCompare(b.word));
+      let byWord = groupWords(found);
 
-    it("should find the right words with constraints", () => {
-      const found = trie.matches("FLTERS", {
-        cells: "**OA"
+      const foundWords = Object.keys(byWord)
+        .sort();
+
+      it("should match the right words", () => {
+        expect(foundWords)
+          .to.deep.equal(sortedWords);
       });
-      expect(found.map(x => x.word))
-        .to.deep.equal(["FLOAT", "FLOATER", "FLOATS"]);
+
+      for (const word of sortedWords) {
+        const matches = byWord[word] || [];
+        for (const m of matches) {
+          it("should have used the correct tiles for " + m.word, () => {
+            const pos = ArrayPicker.reverseIndex(m.path.map(x => x.bagPos));
+            let letter = word.split("");
+            let want = [],
+              got = [];
+
+            for (const bp of pos) {
+              const lt = letter.shift();
+              if (bp === undefined) continue;
+              const bl = bag[bp];
+              if (bl === "*") continue;
+              want.push(lt);
+              got.push(bag[bp]);
+            }
+
+            expect(got)
+              .to.not.be.empty;
+
+            expect(got)
+              .to.deep.equal(want);
+          })
+
+        }
+      }
+    }
+
+    describe("No constraints", () => {
+      const found = testMatches("FLOATERS", {}, ["FLOAT", "FLOATER",
+        "FLOATS"
+      ]);
+    });
+
+    describe("Wildcards", () => {
+      testMatches("**EFLRST", {}, ["CAT", "CATS", "FLOAT",
+        "FLOATER", "FLOATS"
+      ]);
+    });
+
+    describe("Constraints", () => {
+      testMatches("FLTERS", {
+        cells: "**OA"
+      }, ["FLOAT", "FLOATER", "FLOATS"]);
+    });
+
+    describe("Constraints and wildcards", () => {
+      testMatches("FLTER*", {
+        cells: "**OA"
+      }, ["FLOAT", "FLOATER", "FLOATS"]);
     });
   });
 
