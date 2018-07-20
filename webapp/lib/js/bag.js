@@ -1,4 +1,4 @@
-const _ = require("lodash")
+const _ = require("lodash");
 
 class Bag {
   constructor(tiles) {
@@ -10,7 +10,7 @@ class Bag {
   }
 
   add(...tiles) {
-    Array.prototype.push.apply(this.tiles, tiles);
+    Array.prototype.push.apply(this.tiles, _.flattenDeep(tiles));
   }
 
   pull(idx) {
@@ -25,6 +25,10 @@ class Bag {
   fillFrom(bag, n) {
     const need = n - this.size;
     this.add(bag.take(need));
+  }
+
+  toString() {
+    return this.tiles.map(x => x.toString()).join(" | ");
   }
 }
 

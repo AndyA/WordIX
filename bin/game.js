@@ -1,5 +1,7 @@
-const Rules = require("../webapp/lib/js/rules.js");
-const Trie = require("../webapp/lib/js/trie.js");
+const Rules = require("../webapp/lib/js/rules");
+const Trie = require("../webapp/lib/js/trie");
+const Game = require("../webapp/lib/js/game");
+const Turn = require("../webapp/lib/js/turn");
 
 const fs = require("fs");
 
@@ -13,4 +15,13 @@ let words = fs.readFileSync(WORDS)
 console.log("Loaded " + words.length + " words from " + WORDS);
 
 const trie = new Trie(words);
-trie.match("SXLEN*I", word => console.log(word));
+const rules = new Rules();
+const game = new Game({
+  trie,
+  rules
+});
+
+const turn = new Turn(game, game.players[0]);
+console.log(turn.possiblePlays);
+
+// trie.match("SXLEN*I", word => console.log(word));

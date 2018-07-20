@@ -5,6 +5,31 @@ class Cell {
   }
 }
 
+class BoardView {
+  constructor(board, x, y, dx, dy) {
+    Object.assign(this, {
+      board,
+      x,
+      y,
+      dx,
+      dy
+    });
+  }
+
+  get max() {
+    return Math.min(
+      this.dx < 0 ? this.x + 1 : this.board.width - this.x,
+      this.dy < 0 ? this.y + 1 : this.board.height - this.y
+    );
+  }
+
+  cell(pos) {
+    return this.board.cell(
+      this.x + this.dx * pos,
+      this.y + this.dy * pos);
+  }
+}
+
 class Board {
   constructor(opt) {
     Object.assign(this, {
@@ -51,6 +76,10 @@ class Board {
     if (x < 0 || x >= this.width || y < 0 || y >= this.height)
       throw new Error("Board coordinates out of range");
     return this.board[y][x];
+  }
+
+  view(x, y, dx, dy) {
+    return new BoardView(this, x, y, dx, dy);
   }
 
   each(func) {

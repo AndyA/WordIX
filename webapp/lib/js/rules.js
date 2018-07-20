@@ -2,7 +2,10 @@ const Board = require("./board")
 const Flipper = require("./flipper")
 const Bag = require("./bag")
 
-const { Tile, WildTile } = require("./tile");
+const {
+  Tile,
+  WildTile
+} = require("./tile");
 
 const defaultRules = {
   tray: {
@@ -12,6 +15,10 @@ const defaultRules = {
     width: 15,
     height: 15,
     flip: ["x", "y", "diag"],
+    direction: [
+      [1, 0],
+      [0, 1]
+    ],
     special: [{
         multiplier: 2,
         scope: "letter",

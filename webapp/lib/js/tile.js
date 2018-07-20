@@ -17,6 +17,10 @@ class Tile {
   get score() {
     return this.sc;
   }
+
+  toString() {
+    return this.matchLetter;
+  }
 }
 
 class WildTile extends Tile {
