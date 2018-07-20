@@ -9,7 +9,8 @@ class ArrayPicker {
     while (src.length) {
       const i = src.shift();
       out.push(i);
-      src = src.map(x => x > i ? x - 1 : x);
+      if (i !== undefined && i !== null)
+        src = src.map(x => x > i ? x - 1 : x);
     }
 
     return out;
@@ -22,6 +23,10 @@ class ArrayPicker {
 
     while (src.length) {
       const raw = src.shift();
+      if (raw === undefined || raw === null) {
+        out.push(raw);
+        continue;
+      }
       let cooked = raw;
       for (const pos of step)
         if (cooked >= pos)
