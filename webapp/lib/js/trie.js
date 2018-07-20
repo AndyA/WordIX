@@ -50,18 +50,23 @@ class Trie {
     return obj.map(x => makeTile(x));
   }
 
-  _match(nd, path, pos, bag, cellFunc, wordFunc) {
+  _match(nd, opt, path, pos, bag, cellFunc, wordFunc) {
     if (!nd) return;
 
-    // Got a fixed cell?
-    const cell = makeTile(cellFunc(pos));
-    if (cell) {
-      this._match(nd[cell.letter], [...path, {
-          tile: cell,
-          letter: cell.letter
-        }], pos + 1,
-        bag, cellFunc, wordFunc);
+    if (opt.max !== undefined && pos > opt.max)
       return;
+
+    if (opt.max === undefined || pos < opt.max) {
+      // Got a fixed cell?
+      const cell = makeTile(cellFunc(pos));
+      if (cell) {
+        this._match(nd[cell.letter], opt, [...path, {
+            tile: cell,
+            letter: cell.letter
+          }], pos + 1,
+          bag, cellFunc, wordFunc);
+        return;
+      }
     }
 
     // Got a match?
@@ -95,7 +100,7 @@ class Trie {
           nextBag = bag.slice(0);
           nextBag.splice(bagPos, 1);
         }
-        this._match(nextNode, [...path, {
+        this._match(nextNode, opt, [...path, {
           letter: lt,
           tile,
           bagPos
@@ -126,7 +131,7 @@ class Trie {
     const o = opt || {};
     const tiles = this._tiles(bag);
 
-    this._match(this.root, [], 0, tiles,
+    this._match(this.root, o, [], 0, tiles,
       this._cellFunc(o.cells), wordFunc);
   }
 
