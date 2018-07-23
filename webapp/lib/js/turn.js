@@ -7,6 +7,10 @@ class Turn {
     this.opt = Object.assign({}, {}, opt);
   }
 
+  get rules() {
+    return this.game.rules;
+  }
+
   _findWords(x, y, dx, dy) {
     const tray = this.player.tray;
     const view = this.game.board.view(x, y, dx, dy);
@@ -20,7 +24,7 @@ class Turn {
     } = this.game;
 
     const tray = this.player.tray;
-    console.log("tray: " + this.player.tray);
+    let plays = [];
     if (board.used === 0) {
       const cx = Math.floor(board.width / 2);
       const y = Math.floor(board.height / 2);
@@ -33,7 +37,7 @@ class Turn {
               .tile
           })
           .map(x => new Play(this, v, x));
-        console.log(JSON.stringify(found.map(x => x.path), null, 2));
+        Array.prototype.push.apply(plays, found);
       }
     } else {
       for (const [dx, dy] of rules.rules.board.direction) {
@@ -43,6 +47,7 @@ class Turn {
         })
       }
     }
+    return plays;
   }
 
   get possiblePlays() {
