@@ -28,6 +28,7 @@ function sortPlays(a, b) {
 }
 
 const turn = new Turn(game, game.players[0]);
+console.log(turn.player.tray);
 let plays = turn.possiblePlays;
 plays.sort(sortPlays);
 for (const play of plays) {
