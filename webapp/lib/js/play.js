@@ -14,6 +14,18 @@ class Play {
       }
     });
   }
+
+  get rules() {
+    return this.turn.rules;
+  }
+
+  get score() {
+    return this._score = this._score || this.rules.computeScore(this);
+  }
+
+  commit() {
+
+  }
 }
 
 module.exports = Play;

@@ -116,6 +116,9 @@ const defaultRules = {
       Y: 4,
       Z: 10,
     },
+  },
+  bonus: {
+    7: 50
   }
 }
 
@@ -192,6 +195,32 @@ class Rules {
 
     return new Bag(pile);
   }
+
+  computeScore(play) {
+    // console.log(JSON.stringify(play.path, null, 2));
+    let score = 0;
+    let defer = 1;
+    const path = play.path;
+    for (let pos in path) {
+      score += path[pos].tile.score;
+      const cell = path[pos].cell;
+      if (cell.special) {
+        for (const sp of cell.special) {
+          if (sp.scope === "letter")
+            score *= sp.multiplier;
+          else if (sp.scope === "word")
+            defer *= sp.multiplier;
+          else
+            throw new Error("Bad scope: " + sp.scope);
+        }
+      }
+    }
+
+    const played = play.path.length;
+
+    return score * defer + (this.rules.bonus[played] || 0);
+  }
+
 }
 
 module.exports = Rules;

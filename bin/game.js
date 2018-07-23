@@ -21,7 +21,18 @@ const game = new Game({
   rules
 });
 
+function sortPlays(a, b) {
+  if (a.score != b.score)
+    return a.score - b.score;
+  return a.word.localeCompare(b.word);
+}
+
 const turn = new Turn(game, game.players[0]);
-console.log(turn.possiblePlays);
+let plays = turn.possiblePlays;
+plays.sort(sortPlays);
+for (const play of plays) {
+  console.log("word: " + play.word + ", origin: " + play.view.origin +
+    ", score: " + play.score);
+}
 
 // trie.match("SXLEN*I", word => console.log(word));
