@@ -23,10 +23,13 @@ class BoardView {
     );
   }
 
+  xy(pos) {
+    return [this.x + this.dx * pos, this.y + this.dy * pos];
+  }
+
   cell(pos) {
-    return this.board.cell(
-      this.x + this.dx * pos,
-      this.y + this.dy * pos);
+    const [x, y] = this.xy(pos);
+    return this.board.cell(x, y);
   }
 }
 
