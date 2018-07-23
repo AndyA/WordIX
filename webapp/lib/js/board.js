@@ -27,6 +27,10 @@ class BoardView {
     return [this.x + this.dx * pos, this.y + this.dy * pos];
   }
 
+  get origin() {
+    return this.xy(0);
+  }
+
   cell(pos) {
     const [x, y] = this.xy(pos);
     return this.board.cell(x, y);
