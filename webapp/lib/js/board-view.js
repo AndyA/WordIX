@@ -30,7 +30,7 @@ class BoardView {
   }
 
   get origin() {
-    return [this.x, this.y];
+    return this.xy(0);
   }
 
   cell(pos) {
