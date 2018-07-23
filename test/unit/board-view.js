@@ -25,7 +25,7 @@ class TestBoard {
   }
 }
 
-const sizes = [1, 2, 7, 15];
+const sizes = [1, 2, 15];
 
 function forBoards(sizes, cb) {
   for (const w of sizes) {
