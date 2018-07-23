@@ -28,9 +28,9 @@ class Turn {
     if (board.used === 0) {
       const cx = Math.floor(board.width / 2);
       const y = Math.floor(board.height / 2);
-      const [dx, dy] = rules.rules.board.direction[0];
+      const dir = rules.rules.board.direction[0];
       for (let ox = 0; ox < tray.size && cx - ox >= 0; ox++) {
-        const v = board.view(cx - ox, y, dx, dy);
+        const v = board.view(cx - ox, y, dir);
         const found = trie.matches(tray.tiles, {
             max: v.max,
             cell: pos => v.cell(pos)

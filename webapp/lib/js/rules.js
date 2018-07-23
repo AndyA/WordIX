@@ -1,11 +1,14 @@
 const Board = require("./board")
 const Flipper = require("./flipper")
 const Bag = require("./bag")
+const Direction = require("./direction");
 
 const {
   Tile,
   WildTile
 } = require("./tile");
+
+const dirRight = new Direction(1, 0);
 
 const defaultRules = {
   tray: {
@@ -16,8 +19,8 @@ const defaultRules = {
     height: 15,
     flip: ["x", "y", "diag"],
     direction: [
-      [1, 0],
-      [0, 1]
+      dirRight,
+      dirRight.flipped
     ],
     special: [{
         multiplier: 2,
@@ -196,29 +199,34 @@ class Rules {
     return new Bag(pile);
   }
 
-  computeScore(play) {
+  computeWordScore(play) {
     // console.log(JSON.stringify(play.path, null, 2));
     let score = 0;
     let defer = 1;
     const path = play.path;
     for (let pos in path) {
-      score += path[pos].tile.score;
+      let tileScore = path[pos].tile.score;
       const cell = path[pos].cell;
-      if (cell.special) {
+      if (cell.special && !cell.tile) {
         for (const sp of cell.special) {
           if (sp.scope === "letter")
-            score *= sp.multiplier;
+            tileScore *= sp.multiplier;
           else if (sp.scope === "word")
             defer *= sp.multiplier;
           else
             throw new Error("Bad scope: " + sp.scope);
         }
       }
+      score += tileScore;
     }
 
     const played = play.path.length;
 
     return score * defer + (this.rules.bonus[played] || 0);
+  }
+
+  computeScore(play) {
+    return this.computeWordScore(play);
   }
 
 }

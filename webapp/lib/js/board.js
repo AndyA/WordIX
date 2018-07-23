@@ -1,39 +1,10 @@
+const BoardView = require("./board-view")
+const Direction = require("./direction");
+
 class Cell {
   constructor(tile, special) {
     this.tile = tile || null;
     this.special = special || [];
-  }
-}
-
-class BoardView {
-  constructor(board, x, y, dx, dy) {
-    Object.assign(this, {
-      board,
-      x,
-      y,
-      dx,
-      dy
-    });
-  }
-
-  get max() {
-    return Math.min(
-      this.dx < 0 ? this.x + 1 : this.board.width - this.x,
-      this.dy < 0 ? this.y + 1 : this.board.height - this.y
-    );
-  }
-
-  xy(pos) {
-    return [this.x + this.dx * pos, this.y + this.dy * pos];
-  }
-
-  get origin() {
-    return this.xy(0);
-  }
-
-  cell(pos) {
-    const [x, y] = this.xy(pos);
-    return this.board.cell(x, y);
   }
 }
 
@@ -85,8 +56,8 @@ class Board {
     return this.board[y][x];
   }
 
-  view(x, y, dx, dy) {
-    return new BoardView(this, x, y, dx, dy);
+  view(x, y, dir) {
+    return new BoardView(this, x, y, dir);
   }
 
   each(func) {
