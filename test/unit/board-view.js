@@ -4,7 +4,7 @@ var chai = require("chai");
 var expect = chai.expect;
 
 const BoardView = require("../../webapp/lib/js/board-view.js")
-const Direction = require("../../webapp/lib/js/direction.js")
+const Transform = require("../../webapp/lib/js/transform.js")
 
 class TestBoard {
   constructor(width, height) {
@@ -25,45 +25,21 @@ class TestBoard {
   }
 }
 
-const sizes = [1, 2, 15];
-
-function forBoards(sizes, cb) {
-  for (const w of sizes) {
-    for (const h of sizes) {
-      let board = new TestBoard(w, h);
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dy = -1; dy <= 1; dy++) {
-          if (dx === 0 && dy === 0)
-            continue;
-          cb(board, new Direction(dx, dy));
-        }
-      }
-    }
-  }
+function testBounds(w, h, x, y, dir, want) {
+  const b = new TestBoard(w, h);
+  const v = new BoardView(b, new Transform(x, y, dir));
+  expect(v.bounds)
+    .to.deep.equal(want);
 }
 
 describe("BoardView", () => {
-  describe("basic addressing", () => {
-    forBoards(sizes, (board, dir) => {
-      const boardDesc = board.width + "x" + board.height;
-      const dirDesc = "[" + dir.dx + ", " + dir.dy + "]";
-      describe("Board: " + boardDesc + ", Dir: " + dirDesc, () => {
-        it("should return correct cell", () => {
-          for (let x = 0; x < board.width; x++) {
-            for (let y = 0; y < board.height; y++) {
-              const v = new BoardView(board, x, y, dir);
-              for (let pos = v.min; pos <= v.max; pos++) {
-                const cell = v.cell(pos);
-                expect(cell)
-                  .to.deep.equal({
-                    x: x + pos * dir.dx,
-                    y: y + pos * dir.dy
-                  });
-              }
-            }
-          }
-        });
-      });
+
+  describe("bounds", () => {
+    it("should have the right bounds", () => {
+      testBounds(15, 15, 0, 0, "across", [0, 0, 14, 14]);
+      testBounds(11, 21, 3, 5, "across", [-3, -5, 7, 15]);
+      testBounds(11, 21, 3, 5, "down", [-5, -3, 15, 7]);
     });
   });
+
 });
