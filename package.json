@@ -10,18 +10,17 @@
       "url" : "https://github.com/AndyA/WordIX/issues"
    },
    "dependencies" : {
-      "ansi-colors" : "^1.1.0",
-      "fancy-log" : "^1.3.2"
+      "transformation-matrix-js" : "^2.7.5"
    },
-   "description" : "The BBC Computer Literacy Project",
+   "description" : "A cross-word game engine",
    "devDependencies" : {
+      "ansi-colors" : "^1.1.0",
       "babel-core" : "^6.26.3",
       "babel-polyfill" : "^6.26.0",
       "babel-preset-env" : "^1.6.1",
       "babel-preset-react" : "^6.16.0",
       "babelify" : "^7.3.0",
       "bluebird" : "^3.5.1",
-      "bootstrap" : "^3.3.7",
       "browser-sync" : "^2.23.7",
       "browserify" : "^13.1.1",
       "chai" : "^4.1.2",
@@ -30,6 +29,7 @@
       "exorcist" : "^0.4.0",
       "express" : "^4.16.3",
       "express-handlebars" : "^3.0.0",
+      "fancy-log" : "^1.3.2",
       "gulp" : "^3.9.1",
       "gulp-define-module" : "^0.1.5",
       "gulp-handlebars" : "^5.0.2",
@@ -41,7 +41,6 @@
       "gulp-sourcemaps" : "^2.2.0",
       "gulp-uglify" : "^2.0.0",
       "handlebars" : "^4.0.11",
-      "hls.js" : "^0.8.9",
       "jquery" : "^3.1.1",
       "less-plugin-clean-css" : "^1.5.1",
       "lodash" : "^4.17.10",
