@@ -51,7 +51,7 @@ function testTransform(t, src, want) {
     .to.deep.equal(src);
 }
 
-describe.only("Transform", () => {
+describe("Transform", () => {
   describe("identity", () => {
     describe("implicit identity", () => {
       const t = new Transform();
