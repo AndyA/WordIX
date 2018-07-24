@@ -29,11 +29,23 @@ class Transform {
     return [pt.x, pt.y].map(Math.round);
   }
 
+  get origin() {
+    return this.xy(0, 0);
+  }
+
   xys(list) {
     return list.map(xy => {
       const [x, y] = xy;
       return this.xy(x, y)
     });
+  }
+
+  recentre(x, y) {
+    const [ox, oy] = this.origin;
+    const [cx, cy] = this.xy(x, y);
+    let m = this.m.clone();
+    m.translate(cx - ox, cy - oy);
+    return new Transform(m);
   }
 
   get inverse() {

@@ -69,6 +69,10 @@ describe.only("Transform", () => {
 
     describe("origin", () => {
       const t = new Transform(3, 4, "across");
+      it("should have the right origin", () => {
+        expect(t.origin)
+          .to.deep.equal([3, 4]);
+      });
       it("should offset coordinates", () => {
         testTransform(t, testPos, offsetPairs(testPos, 3, 4));
       });
@@ -85,11 +89,28 @@ describe.only("Transform", () => {
     describe("flipped (version)", () => {
       const t = new Transform(3, 4, "across")
         .flipped;
+      it("should have the right origin", () => {
+        expect(t.origin)
+          .to.deep.equal([3, 4]);
+      });
       it("should flip coordinates", () => {
         testTransform(t, testPos, offsetPairs(swapPairs(testPos),
           3, 4));
       });
     });
 
+    describe("recentre", () => {
+      const t = new Transform(5, 7, "down");
+      it("should recentre", () => {
+        expect(t.xy(2, 1))
+          .to.deep.equal([6, 9]);
+        const t2 = t.recentre(3, 0);
+        expect(t2.xy(1, 2))
+          .to.deep.equal([10, 8]);
+        const t3 = t2.flipped;
+        expect(t3.xy(1, 3))
+          .to.deep.equal([9, 10]);
+      });
+    });
   });
 });
