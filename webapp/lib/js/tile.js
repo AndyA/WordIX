@@ -3,7 +3,7 @@ const _ = require("lodash");
 class Tile {
   constructor(lt, sc) {
     this.lt = lt;
-    this.sc = sc;
+    this.sc = sc || 0;
   }
 
   set letter(lt) {
@@ -31,6 +31,10 @@ class Tile {
 class WildTile extends Tile {
   set letter(lt) {
     this.lt = lt;
+  }
+
+  get letter() {
+    return super.letter;
   }
 
   get matchLetter() {

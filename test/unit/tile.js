@@ -28,21 +28,30 @@ describe("Tile", () => {
 });
 
 describe("WildTile", () => {
-  const wildTile = new WildTile();
   it("should not have a letter", () => {
+    const wildTile = new WildTile();
     expect(wildTile.letter)
       .to.be.undefined;
   });
 
   it("should have the right matchLetter", () => {
+    const wildTile = new WildTile();
     expect(wildTile.matchLetter)
       .to.equal("*");
   });
 
   it("should have the right score", () => {
+    const wildTile = new WildTile();
     expect(wildTile.score)
       .to.equal(0);
   });
+
+  it.only("should be possible to set the letter", () => {
+    const wildTile = new WildTile();
+    wildTile.letter = "X";
+    expect(wildTile.letter).to.equal("X");
+  });
+
 });
 
 describe("makeTile", () => {
