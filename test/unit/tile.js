@@ -46,7 +46,7 @@ describe("WildTile", () => {
       .to.equal(0);
   });
 
-  it.only("should be possible to set the letter", () => {
+  it("should be possible to set the letter", () => {
     const wildTile = new WildTile();
     wildTile.letter = "X";
     expect(wildTile.letter).to.equal("X");
