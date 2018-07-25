@@ -33,7 +33,7 @@ class Turn {
         const v = board.view(cx - ox, y, dir);
         const found = trie.matches(tray.tiles, {
             max: v.max,
-            cell: pos => v.cell(pos)
+            cell: pos => v.cell(pos, 0)
               .tile
           })
           .map(x => new Play(this, v, x));

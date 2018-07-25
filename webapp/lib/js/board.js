@@ -1,5 +1,5 @@
 const BoardView = require("./board-view")
-const Direction = require("./direction");
+const Transform = require("./transform");
 
 class Cell {
   constructor(tile, special) {
@@ -57,7 +57,7 @@ class Board {
   }
 
   view(x, y, dir) {
-    return new BoardView(this, x, y, dir);
+    return new BoardView(this, new Transform(x, y, dir));
   }
 
   each(func) {

@@ -10,7 +10,7 @@ class Play {
     this.path = match.path.map((x, i) => {
       return { ...x,
         bagPos: fp[i],
-        cell: view.cell(i)
+        cell: view.cell(i, 0)
       }
     });
   }
