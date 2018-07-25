@@ -11,13 +11,6 @@ class Turn {
     return this.game.rules;
   }
 
-  _searchLeft(v) {
-    const min = v.minX;
-    let ofs = -1;
-    while (ofs >= min && v.tile(ofs, 0)) ofs--;
-    return v.recentre(ofs + 1, 0);
-  }
-
   findPlays(cb) {
     const {
       board,
@@ -28,7 +21,7 @@ class Turn {
 
     let tried = {};
     rules.eachValid(board, (x, y, dir) => {
-      const v = this._searchLeft(board.view(x, y, dir));
+      const v = board.view(x, y, dir).moveLeft();
       const key = [v.origin.join(", "), dir].join(" ");
       if (tried[key]) return;
       tried[key] = true;
