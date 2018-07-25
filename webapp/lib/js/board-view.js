@@ -6,7 +6,8 @@ class BoardView {
 
     if (ox < 0 || ox >= board.width ||
       oy < 0 || oy >= board.height)
-      throw new Error("View outside board");
+      throw new Error("View outside board (" +
+        `[${ox}, ${oy}] v [${board.width}, ${board.height}])`);
 
     this.board = board;
     this.trans = trans;
@@ -58,8 +59,19 @@ class BoardView {
     return new BoardView(this.board, this.trans.recentre(x, y));
   }
 
-  get flipped() {
+  flip() {
     return new BoardView(this.board, this.trans.flipped);
+  }
+
+  get flipped() {
+    return this.flip();
+  }
+
+  moveLeft() {
+    const min = this.minX;
+    let ofs = -1;
+    while (ofs >= min && this.tile(ofs, 0)) ofs--;
+    return this.recentre(ofs + 1, 0);
   }
 }
 
