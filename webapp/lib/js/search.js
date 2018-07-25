@@ -41,13 +41,6 @@ class SearchPath {
     return sp.skip();
   }
 
-  flatten() {
-    let path = this.parent ? this.parent.flatten() : [];
-    if (this.step)
-      path.push(this.step);
-    return path;
-  }
-
   get terminal() {
     return !!this.nd["*"];
   }
@@ -63,6 +56,13 @@ class SearchPath {
       return this._length;
     return this._length = this.parent ? this.parent.length + 1 : 0;
   }
+
+    flatten() {
+      let path = this.parent ? this.parent.flatten() : [];
+      if (this.step)
+        path.push(this.step);
+      return path;
+    }
 
   get path() {
     return this._path = this._path || this.flatten();
