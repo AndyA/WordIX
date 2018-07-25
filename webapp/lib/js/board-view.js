@@ -22,9 +22,36 @@ class BoardView {
     return [...bl, ...tr];
   }
 
+  get min() {
+    return this.bounds[0];
+  }
+
+  get max() {
+    return this.bounds[2];
+  }
+
+  get origin() {
+    return this.trans.origin;
+  }
+
   cell(x, y) {
     const [cx, cy] = this.trans.xy(x, y);
     return this.board.cell(cx, cy);
+  }
+
+  tile(x, y) {
+    return this.cell(x, y)
+      .tile;
+  }
+
+  recentre(x, y) {
+    if (x === 0 && y === 0)
+      return this;
+    return new BoardView(this.board, this.trans.recentre(x, y));
+  }
+
+  get flipped() {
+    return new BoardView(this.board, this.trans.flipped);
   }
 }
 
