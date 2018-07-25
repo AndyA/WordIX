@@ -131,27 +131,6 @@ describe("Trie", () => {
       ]);
     });
 
-    for (let max = 1; max <= 7; max++) {
-      describe("Wildcards and length limit " + max, () => {
-        let checked = [];
-        const want = ["CAT", "CATS", "FLOAT",
-          "FLOATER", "FLOATS"
-        ].filter(x => x.length <= max);
-        testMatches("**EFLRST", {
-          max,
-          cells: pos => {
-            checked.push(pos);
-            return null;
-          }
-        }, want);
-        it("should only check valid cells", () => {
-          expect(Math.max(...checked))
-            .to.be.below(max);
-        });
-      });
-    }
-
-
     describe("Constraints", () => {
       testMatches("FLTERS", {
         cells: "**OA"
