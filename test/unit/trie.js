@@ -152,13 +152,13 @@ describe("Trie", () => {
 
     describe("Constraints", () => {
       testMatches("FLTERS", {
-        cells: makeView("**OA", 15)
+        view: makeView("**OA", 15)
       }, ["FLOAT", "FLOATER", "FLOATS"]);
     });
 
     describe("Constraints and wildcards", () => {
       testMatches("FLTER*", {
-        cells: makeView("**OA", 15)
+        view: makeView("**OA", 15)
       }, ["FLOAT", "FLOATER", "FLOATS"]);
     });
   });

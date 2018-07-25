@@ -51,28 +51,31 @@ class Trie {
     return obj.map(x => makeTile(x));
   }
 
-  _match(nd, opt, path, x, bag, cellFunc, wordFunc) {
+  _match(nd, opt, path, x, bag, view, cb) {
     if (!nd) return;
 
-    if (opt.max !== undefined && x > opt.max)
-      return;
+    if (view) {
+      const max = view.max;
 
-    if (opt.max === undefined || x < opt.max) {
-      // Got a fixed cell?
-      const cell = makeTile(cellFunc(x, 0));
-      if (cell) {
-        this._match(nd[cell.letter], opt, [...path, {
-            tile: cell,
-            letter: cell.letter
-          }], x + 1,
-          bag, cellFunc, wordFunc);
+      if (x > max)
         return;
+
+      if (x < max) {
+        const tile = view.tile(x, 0);
+        if (tile) {
+          this._match(nd[tile.letter], opt, [...path, {
+              tile: tile,
+              letter: tile.letter
+            }], x + 1,
+            bag, view, cb);
+          return;
+        }
       }
     }
 
     // Got a match?
     if (nd["*"]) {
-      wordFunc(path.map(p => p.letter)
+      cb(path.map(p => p.letter)
         .join(""), path);
     }
 
@@ -105,49 +108,28 @@ class Trie {
           letter: lt,
           tile,
           bagPos
-        }], x + 1, nextBag, cellFunc, wordFunc);
+        }], x + 1, nextBag, view, cb);
       }
     }
   }
 
-  _cellFunc(f) {
-    if (!f)
-      return x => null;
-    if (_.isFunction(f))
-      return f;
-    // View?
-    if (f instanceof BoardView)
-      return (x, y) => f.cell(x, y)
-        .tile;
-    const tiles = this._tiles(f);
-    // Default cellFunc indexes into tiles
-    return x => {
-      if (x < 0 || x >= tiles.length)
-        return null;
-      const tile = tiles[x];
-      if (tile && tile.matchLetter === "*")
-        return null;
-      return tile;
-    }
-  }
-
   // TODO how to handle board edge?
-  match(bag, wordFunc, opt) {
+  match(bag, opt, cb) {
     const o = opt || {};
     const tiles = this._tiles(bag);
 
     this._match(this.root, o, [], 0, tiles,
-      this._cellFunc(o.cells), wordFunc);
+      o.view, cb);
   }
 
   matches(bag, opt) {
     var m = [];
-    this.match(bag, (word, path) => {
+    this.match(bag, opt, (word, path) => {
       m.push({
         word,
         path
       });
-    }, opt);
+    });
     return m;
   }
 
