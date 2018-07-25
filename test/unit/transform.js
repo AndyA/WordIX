@@ -99,7 +99,7 @@ describe("Transform", () => {
       });
     });
 
-    describe.only("recentre", () => {
+    describe("recentre", () => {
 
       it("should accumulate", () => {
         let t = new Transform(0, 0, "across");
