@@ -3,39 +3,6 @@ const _ = require("lodash");
 const makeTile = require("./tile")
   .makeTile;
 
-class SearchPath {
-  constructor(view, nd, parent, step) {
-    this.view = view;
-    this.nd = nd;
-    this.parent = parent;
-    this.step = step;
-  }
-
-  advance(step) {
-    const lt = step.letter;
-    if (!lt) throw new Error("No letter defined in step");
-    const next = this.nd[lt];
-    if (!next) return null;
-    return new SearchPath(this.view, next, this, step);
-  }
-
-  flatten() {
-    let path = this.parent ? this.parent.flatten() : [];
-    if (this.step)
-      path.push(this.step);
-    return path;
-  }
-
-  get path() {
-    return this._path = this._path || this.flatten();
-  }
-
-  get word() {
-    return this._word = this._word || this.path.map(p => p.letter)
-      .join("");
-  }
-}
-
 class Trie {
   constructor(words) {
     this.words = words.slice(0);

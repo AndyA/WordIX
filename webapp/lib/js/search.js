@@ -59,8 +59,8 @@ class Search {
 
   _match(sp, bag, level, cb) {
     if (!sp) return;
+
     const nd = sp.nd;
-    if (!nd) return;
     const x = sp.length;
     const view = sp.view;
 
@@ -104,25 +104,24 @@ class Search {
       let nextBag = null; // lazily created
 
       for (let lt of letters) {
-        const nextNode = nd[lt];
-        if (!nextNode)
-          continue;
+        const nextPath = sp.advance({
+          letter: lt,
+          tile,
+          bagPos
+        });
+
+        if (!nextPath) continue;
 
         if (!nextBag) {
           nextBag = bag.slice(0);
           nextBag.splice(bagPos, 1);
         }
 
-        this._match(sp.advance({
-          letter: lt,
-          tile,
-          bagPos
-        }), nextBag, level, cb);
+        this._match(nextPath, nextBag, level, cb);
       }
     }
   }
 
-  // TODO how to handle board edge?
   match(cb) {
     const tiles = this._tiles(this.bag);
 
