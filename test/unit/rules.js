@@ -101,19 +101,36 @@ describe("Rules", () => {
     });
 
     const firstMove = [
-      [0, 3],
-      [1, 3],
-      [2, 0],
-      [2, 1],
-      [2, 2],
-      [2, 3]
+      [0, 3, "across"],
+      [1, 3, "across"],
+      [2, 0, "down"],
+      [2, 1, "down"],
+      [2, 2, "down"],
+      [2, 3, "across"],
+      [2, 3, "down"],
     ];
+
+    function sortMoves(moves) {
+      return moves.slice(0)
+        .sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2].localeCompare(
+          b[2]));
+    }
+
+    function nextMoves() {
+      let moves = [];
+      b.each((cell, x, y) => {
+        if (!cell.tile)
+          moves.push([x, y, "across"], [x, y, "down"]);
+      });
+
+      return sortMoves(moves);
+    }
+
 
     function catchValid() {
       let log = [];
-      r.eachValid(b, (cell, x, y) => log.push([x, y]));
-      log.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
-      return log;
+      r.eachValid(b, (x, y, dir) => log.push([x, y, dir]));
+      return sortMoves(log);
     }
 
     it("should return the correct opening moves", () => {
@@ -129,14 +146,10 @@ describe("Rules", () => {
       b.cell(2, 3)
         .tile = makeTile("E");
 
-      let nextMove = [];
-      b.each((cell, x, y) => {
-        if (!cell.tile) nextMove.push([x, y])
-      });
-      nextMove.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+      const nextMove = nextMoves();
 
       expect(nextMove.length)
-        .to.equal(b.width * b.height - 3);
+        .to.equal(2 * (b.width * b.height - 3));
 
       expect(catchValid())
         .to.deep.equal(nextMove);

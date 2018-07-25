@@ -197,26 +197,29 @@ class Rules {
 
   // Visit each potentially playable cell.
   eachValid(board, cb) {
-    function sendCell(x, y) {
+    function sendCell(x, y, dir) {
       if (x >= 0 && y >= 0)
-        cb(board.cell(x, y), x, y);
+        cb(x, y, dir);
     }
 
     // Opening move?
     if (board.used === 0) {
       const cx = Math.floor(board.width / 2);
       const cy = Math.floor(board.height / 2);
-      sendCell(cx, cy)
-      for (var ofs = 1; ofs < this.rules.tray.size; ofs++) {
-        sendCell(cx - ofs, cy);
-        sendCell(cx, cy - ofs);
+      for (var ofs = 0; ofs < this.rules.tray.size; ofs++) {
+        sendCell(cx - ofs, cy, "across");
+        sendCell(cx, cy - ofs, "down");
       }
       return;
     }
 
     // Regular play
     board.each((cell, x, y) => {
-      if (!cell.tile) sendCell(x, y);
+      if (!cell.tile) {
+        for (const dir of this.rules.board.direction) {
+          sendCell(x, y, dir);
+        }
+      }
     });
   }
 
