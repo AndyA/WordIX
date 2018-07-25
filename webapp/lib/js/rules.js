@@ -226,7 +226,6 @@ class Rules {
   }
 
   computeWordScore(play) {
-    // console.log(JSON.stringify(play.path, null, 2));
     let score = 0;
     let defer = 1;
     const path = play.path;
