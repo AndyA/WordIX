@@ -190,7 +190,7 @@ class Rules {
     for (const lt of Object.keys(lr.count)) {
       for (let i = 0; i < lr.count[lt]; i++) {
         if (lt === "*")
-          pile.push(new WildTile());
+          pile.push(new WildTile);
         else
           pile.push(new Tile(lt, lr.score[lt]));
       }

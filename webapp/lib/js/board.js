@@ -24,7 +24,7 @@ class Board {
     for (let y = 0; y < this.height; y++) {
       let row = [];
       for (let x = 0; x < this.width; x++)
-        row.push(new Cell());
+        row.push(new Cell);
       board.push(row);
     }
     return board;

@@ -15,7 +15,7 @@ class Transform {
 
   constructor(cx, cy, dir) {
     if (cx === undefined) {
-      this.m = new Matrix();
+      this.m = new Matrix;
     } else if (cx instanceof Matrix) {
       this.m = cx;
     } else {

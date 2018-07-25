@@ -42,7 +42,7 @@ function makeTile(letter, score) {
     return;
   if (_.isString(letter)) {
     if (letter === "*")
-      return new WildTile();
+      return new WildTile;
     return new Tile(letter, score);
   }
   return letter; // assume it's a tile
