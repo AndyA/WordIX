@@ -7,7 +7,8 @@ const Rules = require("../../webapp/lib/js/rules.js")
 const Board = require("../../webapp/lib/js/board.js")
 import {
   Tile,
-  WildTile
+  WildTile,
+  makeTile
 } from "../../webapp/lib/js/tile.js";
 
 describe("Rules", () => {
@@ -94,6 +95,52 @@ describe("Rules", () => {
 
   describe("eachValid", () => {
     const r = new Rules;
+    const b = new Board({
+      width: 5,
+      height: 7
+    });
+
+    const firstMove = [
+      [0, 3],
+      [1, 3],
+      [2, 0],
+      [2, 1],
+      [2, 2],
+      [2, 3]
+    ];
+
+    function catchValid() {
+      let log = [];
+      r.eachValid(b, (cell, x, y) => log.push([x, y]));
+      log.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+      return log;
+    }
+
+    it("should return the correct opening moves", () => {
+      expect(catchValid())
+        .to.deep.equal(firstMove);
+    });
+
+    it("should return the correct second move", () => {
+      b.cell(0, 3)
+        .tile = makeTile("T");
+      b.cell(1, 3)
+        .tile = makeTile("H");
+      b.cell(2, 3)
+        .tile = makeTile("E");
+
+      let nextMove = [];
+      b.each((cell, x, y) => {
+        if (!cell.tile) nextMove.push([x, y])
+      });
+      nextMove.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+
+      expect(nextMove.length)
+        .to.equal(b.width * b.height - 3);
+
+      expect(catchValid())
+        .to.deep.equal(nextMove);
+    });
   });
 
 });
