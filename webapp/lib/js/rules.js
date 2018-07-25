@@ -225,6 +225,14 @@ class Rules {
     });
   }
 
+  validPlay(board, play) {
+    if (!play.novel)
+      return false;
+    if (board.used)
+      return play.adjoined;
+    return !play.adjoined;
+  }
+
   computeWordScore(play) {
     let score = 0;
     let defer = 1;

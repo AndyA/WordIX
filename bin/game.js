@@ -26,9 +26,10 @@ function comparePlays(a, b) {
     a.word.localeCompare(b.word);
 }
 
-let limit = 2;
+let limit = 100;
 while (game.canPlay) {
   const player = game.nextPlayer();
+  console.log();
   console.log("Player: " + player.tray + " (" + player.name + ")");
   const turn = new Turn(game, player);
   let plays = turn.possiblePlays;
@@ -43,8 +44,8 @@ while (game.canPlay) {
   if (plays.length) {
     const play = plays.pop();
     console.log("word: " + play.word + ", origin: " + play.view.origin +
-      ", score: " + play.score);
-      console.log(JSON.stringify(play.path, null, 2));
+      ", score: " + play.score + ", adjoined: " + play.adjoined);
+    // console.log(JSON.stringify(play.path, null, 2));
     play.commit();
     game.fillTray(player);
     console.log(game.board.toString());
