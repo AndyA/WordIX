@@ -51,20 +51,20 @@ class Trie {
     return obj.map(x => makeTile(x));
   }
 
-  _match(nd, opt, path, pos, bag, cellFunc, wordFunc) {
+  _match(nd, opt, path, x, bag, cellFunc, wordFunc) {
     if (!nd) return;
 
-    if (opt.max !== undefined && pos > opt.max)
+    if (opt.max !== undefined && x > opt.max)
       return;
 
-    if (opt.max === undefined || pos < opt.max) {
+    if (opt.max === undefined || x < opt.max) {
       // Got a fixed cell?
-      const cell = makeTile(cellFunc(pos));
+      const cell = makeTile(cellFunc(x, 0));
       if (cell) {
         this._match(nd[cell.letter], opt, [...path, {
             tile: cell,
             letter: cell.letter
-          }], pos + 1,
+          }], x + 1,
           bag, cellFunc, wordFunc);
         return;
       }
@@ -105,7 +105,7 @@ class Trie {
           letter: lt,
           tile,
           bagPos
-        }], pos + 1, nextBag, cellFunc, wordFunc);
+        }], x + 1, nextBag, cellFunc, wordFunc);
       }
     }
   }
