@@ -1,11 +1,40 @@
 const _ = require("lodash");
 
-const ArrayPicker = require("./array-picker");
-const BoardView = require("./board-view");
+const makeTile = require("./tile")
+  .makeTile;
 
-const {
-  makeTile
-} = require("./tile");
+class SearchPath {
+  constructor(view, nd, parent, step) {
+    this.view = view;
+    this.nd = nd;
+    this.parent = parent;
+    this.step = step;
+  }
+
+  advance(step) {
+    const lt = step.letter;
+    if (!lt) throw new Error("No letter defined in step");
+    const next = this.nd[lt];
+    if (!next) return null;
+    return new SearchPath(this.view, next, this, step);
+  }
+
+  flatten() {
+    let path = this.parent ? this.parent.flatten() : [];
+    if (this.step)
+      path.push(this.step);
+    return path;
+  }
+
+  get path() {
+    return this._path = this._path || this.flatten();
+  }
+
+  get word() {
+    return this._word = this._word || this.path.map(p => p.letter)
+      .join("");
+  }
+}
 
 class Trie {
   constructor(words) {
@@ -49,91 +78,6 @@ class Trie {
     if (!_.isArray(obj))
       throw new Error("Need a string or an array");
     return obj.map(x => makeTile(x));
-  }
-
-  _match(nd, opt, path, x, bag, view, level, cb) {
-    if (!nd) return;
-
-    if (view) {
-      const max = view.maxX;
-      if (x > max)
-        return;
-
-      if (x < max) {
-        const tile = view.tile(x, 0);
-        if (tile) {
-          this._match(nd[tile.letter], opt, [...path, {
-              tile: tile,
-              letter: tile.letter
-            }], x + 1,
-            bag, view, level, cb);
-          return;
-        }
-      }
-    }
-
-    // Got a match?
-    if (nd["*"]) {
-      cb({
-        word: path.map(p => p.letter)
-          .join(""),
-        path
-      });
-    }
-
-    // Now look above and below
-    if (view && level === 0) {
-    }
-
-    // Check the bag
-    let seen = {};
-    for (let bagPos = 0; bagPos < bag.length; bagPos++) {
-      const tile = bag[bagPos];
-      const letter = tile.matchLetter;
-
-      // Only process each letter once
-      if (seen[letter]) continue;
-      seen[letter] = true;
-
-      // Expand wildcard
-      const letters = letter === "*" ? Object.keys(nd)
-        .filter(lt => lt !== "*")
-        .sort() : [letter];
-
-      let nextBag = null; // lazily created
-
-      for (let lt of letters) {
-        const nextNode = nd[lt];
-        if (!nextNode)
-          continue;
-        if (!nextBag) {
-          nextBag = bag.slice(0);
-          nextBag.splice(bagPos, 1);
-        }
-        this._match(nextNode, opt, [...path, {
-          letter: lt,
-          tile,
-          bagPos
-        }], x + 1, nextBag, view, level, cb);
-      }
-    }
-  }
-
-  // TODO how to handle board edge?
-  match(bag, opt, cb) {
-    const o = opt || {};
-    const tiles = this._tiles(bag);
-
-    this._match(this.root, o, [], 0, tiles,
-      o.view, 0, cb);
-  }
-
-  matches(bag, opt) {
-    var m = [];
-    this.match(bag, opt, (match) => {
-      m.push(match);
-    });
-    return m;
   }
 
   valid(word) {

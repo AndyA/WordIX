@@ -1,4 +1,5 @@
 const Play = require("./play");
+const Search = require("./search");
 
 class Turn {
   constructor(game, player, opt) {
@@ -25,11 +26,9 @@ class Turn {
       const key = [v.origin.join(", "), dir].join(" ");
       if (tried[key]) return;
       tried[key] = true;
-      trie.match(tray.tiles, {
-        view: v
-      }, (match) => {
-        cb(new Play(this, v, match));
-      });
+
+      const search = new Search(trie, v, tray.tiles);
+      search.match(m => cb(new Play(this, v, m)));
     });
   }
 
