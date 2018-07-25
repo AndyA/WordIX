@@ -197,8 +197,10 @@ class Rules {
 
   // Visit each potentially playable cell.
   eachValid(board, cb) {
+    const directions = this.rules.board.direction;
+
     function sendCell(x, y, dir) {
-      if (x >= 0 && y >= 0)
+      if (x >= 0 && y >= 0 && directions.indexOf(dir) >= 0)
         cb(x, y, dir);
     }
 
@@ -216,7 +218,7 @@ class Rules {
     // Regular play
     board.each((cell, x, y) => {
       if (!cell.tile) {
-        for (const dir of this.rules.board.direction) {
+        for (const dir of directions) {
           sendCell(x, y, dir);
         }
       }
