@@ -22,12 +22,20 @@ class BoardView {
     return [...bl, ...tr];
   }
 
-  get min() {
+  get minX() {
     return this.bounds[0];
   }
 
-  get max() {
+  get minY() {
+    return this.bounds[1];
+  }
+
+  get maxX() {
     return this.bounds[2];
+  }
+
+  get maxY() {
+    return this.bounds[3];
   }
 
   get origin() {

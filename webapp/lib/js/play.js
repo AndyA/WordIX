@@ -23,8 +23,23 @@ class Play {
     return this._score = this._score || this.rules.computeScore(this);
   }
 
-  commit() {
+  _takeFromRack() {
+    const pick = this.path.map(x => x.bagPos)
+      .filter(x => x !== undefined);
+    this.turn.player.tray.pull(pick);
+  }
 
+  _playTiles() {
+    for (const x in this.path) {
+      const node = this.path[x];
+      node.tile.letter = node.letter;
+      this.view.cell(x, 0).tile = node.tile;
+    }
+  }
+
+  commit() {
+    this._takeFromRack();
+    this._playTiles();
   }
 }
 

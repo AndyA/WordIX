@@ -6,6 +6,11 @@ class Tile {
     this.sc = sc;
   }
 
+  set letter(lt) {
+    if (lt !== this.lt)
+      throw new Error("Can't reassign a regular tile");
+  }
+
   get letter() {
     return this.lt;
   }

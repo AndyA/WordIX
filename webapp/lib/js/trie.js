@@ -51,12 +51,11 @@ class Trie {
     return obj.map(x => makeTile(x));
   }
 
-  _match(nd, opt, path, x, bag, view, cb) {
+  _match(nd, opt, path, x, bag, view, level, cb) {
     if (!nd) return;
 
     if (view) {
-      const max = view.max;
-
+      const max = view.maxX;
       if (x > max)
         return;
 
@@ -67,7 +66,7 @@ class Trie {
               tile: tile,
               letter: tile.letter
             }], x + 1,
-            bag, view, cb);
+            bag, view, level, cb);
           return;
         }
       }
@@ -75,8 +74,15 @@ class Trie {
 
     // Got a match?
     if (nd["*"]) {
-      cb(path.map(p => p.letter)
-        .join(""), path);
+      cb({
+        word: path.map(p => p.letter)
+          .join(""),
+        path
+      });
+    }
+
+    // Now look above and below
+    if (view && level === 0) {
     }
 
     // Check the bag
@@ -108,7 +114,7 @@ class Trie {
           letter: lt,
           tile,
           bagPos
-        }], x + 1, nextBag, view, cb);
+        }], x + 1, nextBag, view, level, cb);
       }
     }
   }
@@ -119,16 +125,13 @@ class Trie {
     const tiles = this._tiles(bag);
 
     this._match(this.root, o, [], 0, tiles,
-      o.view, cb);
+      o.view, 0, cb);
   }
 
   matches(bag, opt) {
     var m = [];
-    this.match(bag, opt, (word, path) => {
-      m.push({
-        word,
-        path
-      });
+    this.match(bag, opt, (match) => {
+      m.push(match);
     });
     return m;
   }

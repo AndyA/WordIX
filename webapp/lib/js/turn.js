@@ -11,47 +11,41 @@ class Turn {
     return this.game.rules;
   }
 
-  _findWords(x, y, dx, dy) {
-    const tray = this.player.tray;
-    const view = this.game.board.view(x, y, dx, dy);
+  _searchLeft(v) {
+    const min = v.minX;
+    let ofs = -1;
+    while (ofs >= min && v.tile(ofs, 0)) ofs--;
+    return v.recentre(ofs + 1, 0);
   }
 
-  _possiblePlays() {
+  findPlays(cb) {
     const {
       board,
       rules,
       trie
     } = this.game;
-
     const tray = this.player.tray;
-    let plays = [];
-    if (board.used === 0) {
-      const cx = Math.floor(board.width / 2);
-      const y = Math.floor(board.height / 2);
-      const dir = rules.rules.board.direction[0];
-      for (let ox = 0; ox < tray.size && cx - ox >= 0; ox++) {
-        const v = board.view(cx - ox, y, dir);
-        const found = trie.matches(tray.tiles, {
-            max: v.max,
-            cell: pos => v.cell(pos, 0)
-              .tile
-          })
-          .map(x => new Play(this, v, x));
-        Array.prototype.push.apply(plays, found);
-      }
-    } else {
-      for (const [dx, dy] of rules.rules.board.direction) {
-        console.log({
-          dx,
-          dy
-        })
-      }
-    }
-    return plays;
+
+    let tried = {};
+    rules.eachValid(board, (x, y, dir) => {
+      const v = this._searchLeft(board.view(x, y, dir));
+      const key = [v.origin.join(", "), dir].join(" ");
+      if (tried[key]) return;
+      tried[key] = true;
+      trie.match(tray.tiles, {
+        view: v
+      }, (match) => {
+        cb(new Play(this, v, match));
+      });
+    });
   }
 
   get possiblePlays() {
-    return this._possible = this._possible || this._possiblePlays();
+    if (this._possible)
+      return this._possible;
+    let plays = [];
+    this.findPlays(play => plays.push(play));
+    return this._possible = plays;
   }
 }
 

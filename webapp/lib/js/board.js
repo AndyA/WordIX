@@ -65,6 +65,15 @@ class Board {
       for (let x = 0; x < this.width; x++)
         func(this.cell(x, y), x, y);
   }
+
+  toString() {
+    // Wildcards not working...
+    return this.board.map(row => {
+        return row.map(cell => cell.tile ? cell.tile.letter : " ")
+          .join(" | ")
+      })
+      .join("\n");
+  }
 }
 
 module.exports = Board;

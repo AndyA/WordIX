@@ -21,27 +21,36 @@ const game = new Game({
   rules
 });
 
-function sortPlays(a, b) {
-  if (a.score != b.score)
-    return a.score - b.score;
-  return a.word.localeCompare(b.word);
+function comparePlays(a, b) {
+  return a.score - b.score ||
+    a.word.localeCompare(b.word);
 }
 
-const turn = new Turn(game, game.players[0]);
-console.log(turn.player.tray);
-if (1) {
-  turn.findPlays(play => {
-    console.log("word: " + play.word + ", origin: " + play.view.origin +
-      ", score: " + play.score);
-  });
-}
-else {
+let limit = 2;
+while (game.canPlay) {
+  const player = game.nextPlayer();
+  console.log("Player: " + player.tray + " (" + player.name + ")");
+  const turn = new Turn(game, player);
   let plays = turn.possiblePlays;
-  plays.sort(sortPlays);
-  for (const play of plays) {
+  plays.sort(comparePlays);
+  if (0) {
+    for (const play of plays) {
+      console.log("word: " + play.word + ", origin: " + play.view.origin +
+        ", score: " + play.score);
+    }
+  }
+
+  if (plays.length) {
+    const play = plays.pop();
     console.log("word: " + play.word + ", origin: " + play.view.origin +
       ", score: " + play.score);
+    play.commit();
+    game.fillTray(player);
+    console.log(game.board.toString());
   }
+
+  if (--limit <= 0)
+    break;
 }
 
 // trie.match("SXLEN*I", word => console.log(word));
