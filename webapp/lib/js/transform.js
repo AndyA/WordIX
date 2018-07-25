@@ -41,10 +41,10 @@ class Transform {
   }
 
   recentre(x, y) {
-    const [ox, oy] = this.origin;
     const [cx, cy] = this.xy(x, y);
     let m = this.m.clone();
-    m.translate(cx - ox, cy - oy);
+    m.e = cx;
+    m.f = cy;
     return new Transform(m);
   }
 

@@ -99,17 +99,26 @@ describe("Transform", () => {
       });
     });
 
-    describe("recentre", () => {
-      const t = new Transform(5, 7, "down");
-      it("should recentre", () => {
-        expect(t.xy(2, 1))
-          .to.deep.equal([6, 9]);
-        const t2 = t.recentre(3, 0);
-        expect(t2.xy(1, 2))
-          .to.deep.equal([10, 8]);
-        const t3 = t2.flipped;
-        expect(t3.xy(1, 3))
-          .to.deep.equal([9, 10]);
+    describe.only("recentre", () => {
+
+      it("should accumulate", () => {
+        let t = new Transform(0, 0, "across");
+        let o = [t.origin];
+        for (const delta of [10, -10]) {
+          for (let i = 0; i < 2; i++) {
+            t = t.recentre(delta, 0);
+            o.push(t.origin);
+            t = t.flipped;
+          }
+        }
+        expect(o)
+          .to.deep.equal([
+            [0, 0],
+            [10, 0],
+            [10, 10],
+            [0, 10],
+            [0, 0]
+          ])
       });
     });
   });
