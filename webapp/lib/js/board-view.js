@@ -5,7 +5,7 @@ class BoardView {
     const [ox, oy] = trans.origin;
 
     if (ox < 0 || ox >= board.width ||
-        oy < 0 || oy >= board.height)
+      oy < 0 || oy >= board.height)
       throw new Error("View outside board");
 
     this.board = board;
