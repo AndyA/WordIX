@@ -1,6 +1,7 @@
 const _ = require("lodash");
 
 const ArrayPicker = require("./array-picker");
+const BoardView = require("./board-view");
 
 const {
   makeTile
@@ -114,6 +115,10 @@ class Trie {
       return x => null;
     if (_.isFunction(f))
       return f;
+    // View?
+    if (f instanceof BoardView)
+      return (x, y) => f.cell(x, y)
+        .tile;
     const tiles = this._tiles(f);
     // Default cellFunc indexes into tiles
     return x => {
