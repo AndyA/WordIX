@@ -199,6 +199,30 @@ class Rules {
     return new Bag(pile);
   }
 
+  eachValid(board, cb) {
+    function sendCell(x, y) {
+      if (x >= 0 && y >= 0)
+        cb(board.cell(x, y), x, y);
+    }
+
+    // Opening move?
+    if (board.used === 0) {
+      const cx = Math.floor(board.width / 2);
+      const cy = Math.floor(board.height / 2);
+      sendCell(cx, cy)
+      for (var ofs = 1; ofs < this.rules.tray.size; ofs++) {
+        sendCell(cx - ofs, cy);
+        sendCell(cx, cy - ofs);
+      }
+      return;
+    }
+
+    // Regular play
+    board.each((cell, x, y) => {
+      if (!cell.tile) sendCell(x, y);
+    });
+  }
+
   computeWordScore(play) {
     // console.log(JSON.stringify(play.path, null, 2));
     let score = 0;

@@ -4,15 +4,16 @@ const chai = require("chai");
 const expect = chai.expect;
 
 const Rules = require("../../webapp/lib/js/rules.js")
+const Board = require("../../webapp/lib/js/board.js")
 import {
   Tile,
   WildTile
 } from "../../webapp/lib/js/tile.js";
 
 describe("Rules", () => {
-  const r = new Rules;
 
   describe("board", () => {
+    const r = new Rules;
     const expectBoard = [
       "T..d...T...d..T",
       ".D...t...t...D.",
@@ -67,6 +68,7 @@ describe("Rules", () => {
   });
 
   describe("bag", () => {
+    const r = new Rules;
     const bag = r.makeBag();
     it("should be the right size", () => {
       expect(bag.size)
@@ -88,7 +90,10 @@ describe("Rules", () => {
       expect(gs[0].score)
         .to.equal(2);
     });
+  });
 
+  describe("eachValid", () => {
+    const r = new Rules;
   });
 
 });
