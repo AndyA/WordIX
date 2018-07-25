@@ -5,6 +5,9 @@ var expect = chai.expect;
 
 const Trie = require("../../webapp/lib/js/trie.js")
 const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
+const Board = require("../../webapp/lib/js/board.js");
+const makeTile = require("../../webapp/lib/js/tile.js")
+  .makeTile;
 
 describe("Trie", () => {
   const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",
@@ -75,6 +78,22 @@ describe("Trie", () => {
       return byWord;
     }
 
+    function makeView(word, size) {
+      const b = new Board({
+        width: size,
+        height: size
+      });
+      const v = b.view(1, Math.floor(size / 2), "across");
+      for (const x in word) {
+        const lt = word[x];
+        let cell = v.cell(x, 0);
+        if (lt !== "*")
+          v.cell(x, 0)
+          .tile = makeTile(lt);
+      }
+      return v;
+    }
+
     function testMatches(bag, opt, words) {
       let sortedWords = words.slice(0)
         .sort();
@@ -133,13 +152,13 @@ describe("Trie", () => {
 
     describe("Constraints", () => {
       testMatches("FLTERS", {
-        cells: "**OA"
+        cells: makeView("**OA", 15)
       }, ["FLOAT", "FLOATER", "FLOATS"]);
     });
 
     describe("Constraints and wildcards", () => {
       testMatches("FLTER*", {
-        cells: "**OA"
+        cells: makeView("**OA", 15)
       }, ["FLOAT", "FLOATER", "FLOATS"]);
     });
   });
