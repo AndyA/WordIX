@@ -19,11 +19,43 @@ class SearchPath {
     return new SearchPath(this.view, next, this, step);
   }
 
+  skip() {
+    let sp = this;
+    const max = this.view.maxX;
+    for (let x = 0; x <= max; x++) {
+      const tile = this.view.tile(x, 0);
+      if (!tile) break;
+      const next = sp.advance({
+        tile,
+        letter: tile.letter
+      })
+      if (!next) break;
+      sp = next;
+    }
+    return sp;
+  }
+
+  advanceAndSkip(step) {
+    let sp = this.advance(step);
+    if (!sp) return null;
+    return sp.skip();
+  }
+
   flatten() {
     let path = this.parent ? this.parent.flatten() : [];
     if (this.step)
       path.push(this.step);
     return path;
+  }
+
+  get terminal() {
+    return !!this.nd["*"];
+  }
+
+  get validLetters() {
+    return this._vl = this._vl || Object.keys(this.nd)
+      .filter(x => x !== "*")
+      .sort();
   }
 
   get length() {
@@ -47,6 +79,7 @@ class Search {
     this.trie = trie;
     this.view = view;
     this.bag = bag;
+    this._cp = {};
   }
 
   _tiles(obj) {
@@ -57,10 +90,31 @@ class Search {
     return obj.map(x => makeTile(x));
   }
 
-  _match(sp, bag, level, cb) {
+  _hasCrossWord(view, x) {
+    return (view.minY < 0 && view.tile(x, -1)) ||
+      (view.maxY > 0 && view.tile(x, 1));
+  }
+
+  _makeCrossPath(view, x) {
+    if (!this._hasCrossWord(view, x))
+      return null;
+
+    const cv = view.recentre(x, 0)
+      .flip()
+      .moveLeft();
+    return new SearchPath(cv, this.trie)
+      .skip();
+  }
+
+  _crossPath(x) {
+    let cp = this._cp;
+    if (cp.hasOwnProperty(x)) return cp[x];
+    return cp[x] = this._makeCrossPath(this.view, x);
+  }
+
+  _match(sp, bag, cb) {
     if (!sp) return;
 
-    const nd = sp.nd;
     const x = sp.length;
     const view = sp.view;
 
@@ -76,18 +130,20 @@ class Search {
               tile: tile,
               letter: tile.letter
             }),
-            bag, level, cb);
+            bag, cb);
           return;
         }
       }
     }
 
     // Got a match?
-    if (nd["*"])
+    if (sp.terminal)
       cb(sp);
 
     // Check the bag
     let seen = {};
+    const cp = this._crossPath(x);
+
     for (let bagPos = 0; bagPos < bag.length; bagPos++) {
       const tile = bag[bagPos];
       const letter = tile.matchLetter;
@@ -97,19 +153,28 @@ class Search {
       seen[letter] = true;
 
       // Expand wildcard
-      const letters = letter === "*" ? Object.keys(nd)
-        .filter(lt => lt !== "*")
-        .sort() : [letter];
+      const letters = letter === "*" ? sp.validLetters : [letter];
 
       let nextBag = null; // lazily created
 
       for (let lt of letters) {
-        const nextPath = sp.advance({
+        let nextTile = {
           letter: lt,
           tile,
           bagPos
-        });
+        };
 
+        // Match cross word
+        if (cp) {
+          let ncp = cp.advanceAndSkip({
+            letter: lt,
+            tile
+          });
+          if (!ncp || !ncp.terminal) continue;
+          nextTile.cross = ncp;
+        }
+
+        const nextPath = sp.advance(nextTile);
         if (!nextPath) continue;
 
         if (!nextBag) {
@@ -117,7 +182,7 @@ class Search {
           nextBag.splice(bagPos, 1);
         }
 
-        this._match(nextPath, nextBag, level, cb);
+        this._match(nextPath, nextBag, cb);
       }
     }
   }
@@ -126,7 +191,7 @@ class Search {
     const tiles = this._tiles(this.bag);
 
     this._match(new SearchPath(this.view, this.trie.root),
-      tiles, 0, cb);
+      tiles, cb);
   }
 
   matches() {

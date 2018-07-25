@@ -44,6 +44,7 @@ while (game.canPlay) {
     const play = plays.pop();
     console.log("word: " + play.word + ", origin: " + play.view.origin +
       ", score: " + play.score);
+      console.log(JSON.stringify(play.path, null, 2));
     play.commit();
     game.fillTray(player);
     console.log(game.board.toString());
