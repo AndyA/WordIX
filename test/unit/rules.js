@@ -5,11 +5,11 @@ const expect = chai.expect;
 
 const Rules = require("../../webapp/lib/js/rules.js")
 const Board = require("../../webapp/lib/js/board.js")
-import {
+const {
   Tile,
   WildTile,
   makeTile
-} from "../../webapp/lib/js/tile.js";
+} = require("../../webapp/lib/js/tile.js");
 
 describe("Rules", () => {
 
