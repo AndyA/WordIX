@@ -195,6 +195,7 @@ class Rules {
     return new Bag(pile);
   }
 
+  // Visit each potentially playable cell.
   eachValid(board, cb) {
     function sendCell(x, y) {
       if (x >= 0 && y >= 0)
