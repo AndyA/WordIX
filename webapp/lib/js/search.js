@@ -45,7 +45,8 @@ class SearchPath {
   }
 
   get terminal() {
-    return !!this.nd["*"];
+    return this.nd["*"] &&
+      (this.length > this.view.maxX || !this.view.tile(this.length, 0));
   }
 
   get validLetters() {

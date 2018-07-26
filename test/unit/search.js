@@ -7,6 +7,7 @@ const Trie = require("../../webapp/lib/js/trie.js")
 const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
 const Bag = require("../../webapp/lib/js/bag.js");
 const Board = require("../../webapp/lib/js/board.js");
+const Rules = require("../../webapp/lib/js/rules.js");
 const Search = require("../../webapp/lib/js/search.js");
 const makeTile = require("../../webapp/lib/js/tile.js")
   .makeTile;
@@ -19,6 +20,29 @@ function groupWords(found) {
     byWord[word].push(w);
   }
   return byWord;
+}
+
+function makeBoard(spec) {
+  const height = spec.length;
+  const width = Math.max.apply(null, spec.map(row => row.length));
+
+  const rules = new Rules;
+  let board = rules.makeBoard();
+  if (board.width != width || board.height != height)
+    throw new Error(`Board size mismatch: ` +
+      `(${board.width} x ${board.height}) v (${width} x ${height})`)
+
+  for (const y in spec) {
+    const row = spec[y];
+    for (const x in row) {
+      const lt = row[x];
+      if (lt === " ") continue;
+      board.cell(x, y)
+        .tile = makeTile(lt, rules.letterScore(lt));
+    }
+  }
+
+  return [board, rules];
 }
 
 function makeView(word, size) {
@@ -142,6 +166,80 @@ describe("Search", () => {
       });
     });
 
+    describe("Bugs", () => {
+      describe("Invalid cross plays", () => {
+        const testCases = [
+          {
+            board: [
+              "      M        ",
+              "    TRICLAD    ",
+              "      Z        ",
+              "      UP       ",
+              "      NE       ",
+              " RANULAR       ",
+              "  HOG  V       ",
+              "       S       ",
+              "               ",
+              "               ",
+              "               ",
+              "               ",
+              "               ",
+              "               ",
+              "               "
+            ],
+            bag: "OWALXMR",
+            word: "WAXWORM",
+            x: 1,
+            y: 0,
+            dir: "down",
+            extra: [],
+            want: []
+          },
+          {
+            board: [
+              "               ",
+              "        OF     ",
+              "        ZA     ",
+              "        ON     ",
+              "     M  N      ",
+              "   A AUGITES   ",
+              "   L R  D      ",
+              "   KETE E      ",
+              "   A ET        ",
+              "   L XU JEW    ",
+              "   INTIMAL     ",
+              "   N           ",
+              "               ",
+              "               ",
+              "               "
+            ],
+            bag: "VTEVOSU",
+            word: "OUTLERS",
+            x: 0,
+            y: 6,
+            dir: "across",
+            extra: ["EE"],
+            want: ["ET"]
+          }
+        ];
+
+        for (const tc of testCases) {
+          it(`should play correctly (${tc.word})`, () => {
+            const [b, r] = makeBoard(tc.board);
+            let dict = b.words(r.direction);
+            dict.push(tc.word);
+            Array.prototype.push.apply(dict, tc.extra || []);
+            dict.sort();
+            const trie = new Trie(dict);
+            const v = b.view(tc.x, tc.y, tc.dir);
+            const search = new Search(trie, v, tc.bag);
+            const match = search.matches();
+            expect(match.map(m => m.word))
+              .to.deep.equal(tc.want);
+          });
+        }
+      });
+    });
 
   });
 
