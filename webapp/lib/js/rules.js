@@ -140,7 +140,7 @@ class Rules {
 
     const br = this.rules.board;
 
-    var flip = [];
+    let flip = [];
     for (const f of br.flip) {
       switch (f) {
         case "x":
@@ -216,7 +216,7 @@ class Rules {
     if (board.used === 0) {
       const cx = Math.floor(board.width / 2);
       const cy = Math.floor(board.height / 2);
-      for (var ofs = 0; ofs < this.rules.tray.size; ofs++) {
+      for (let ofs = 0; ofs < this.rules.tray.size; ofs++) {
         sendCell(cx - ofs, cy, "across");
         sendCell(cx, cy - ofs, "down");
       }

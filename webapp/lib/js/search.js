@@ -253,7 +253,7 @@ class Search {
   }
 
   matches() {
-    var m = [];
+    let m = [];
     this.match(match => {
       m.push(match);
     });
