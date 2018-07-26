@@ -4,7 +4,7 @@ class Flipper {
   }
 
   _flip(items, ff) {
-    var out = [];
+    let out = [];
     for (const i of items) {
       out.push(i);
       out.push(ff(...i));
@@ -13,10 +13,10 @@ class Flipper {
   }
 
   flip(args, func) {
-    var work = [args];
+    let work = [args];
     for (const flip of this.flips)
       work = this._flip(work, flip);
-    var seen = {};
+    let seen = {};
     for (const a of work) {
       const key = JSON.stringify(a);
       if (seen[key]) continue;
