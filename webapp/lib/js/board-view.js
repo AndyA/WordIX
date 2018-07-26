@@ -43,8 +43,12 @@ class BoardView {
     return this.trans.origin;
   }
 
+  xy(x, y) {
+    return this.trans.xy(x, y);
+  }
+
   cell(x, y) {
-    const [cx, cy] = this.trans.xy(x, y);
+    const [cx, cy] = this.xy(x, y);
     return this.board.cell(cx, cy);
   }
 
