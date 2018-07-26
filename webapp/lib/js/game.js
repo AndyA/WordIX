@@ -63,6 +63,10 @@ class Game {
     if (invalid.length)
       throw new Error("Illegal words: " + invalid.join(", "));
   }
+
+  get words() {
+    return this.board.words(this.rules.direction);
+  }
 }
 
 module.exports = Game;
