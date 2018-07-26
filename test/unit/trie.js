@@ -88,4 +88,28 @@ describe("Trie", () => {
     });
   });
 
+  describe("Duplicates OK?", () => {
+    it("should ignore duplicates", () => {
+      const trie = new Trie(["AAA", "AAA", "AAB", "AAC", "AAC"]);
+      const want = {
+        "A": {
+          "A": {
+            "A": {
+              "*": {}
+            },
+            "B": {
+              "*": {}
+            },
+            "C": {
+              "*": {}
+            }
+          }
+        }
+      };
+
+      expect(trie.root)
+        .to.deep.equal(want);
+    });
+  });
+
 });
