@@ -39,10 +39,20 @@ while (game.canPlay) {
     const play = plays.pop();
     console.log("word: " + play.word + ", origin: " + play.view.origin +
       ", score: " + play.score + ", adjoined: " + play.adjoined);
+    console.log(play.match.toString());
     play.commit();
     game.fillTray(player);
     console.log(game.board.toString());
+    game.sanityCheck();
   }
+}
+
+console.log();
+console.log("Final words: " + game.words.sort()
+  .join(", "));
+
+for (const player of game.players) {
+  console.log(`${player.score} - ${player.name}`);
 }
 
 // trie.match("SXLEN*I", word => console.log(word));
