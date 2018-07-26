@@ -4,25 +4,28 @@ const makeTile = require("./tile")
   .makeTile;
 
 class SearchPath {
-  constructor(view, nd, parent, step) {
+  constructor(view, nd, parent, step, length) {
     this.view = view;
     this.nd = nd;
     this.parent = parent;
     this.step = step;
+    this.length = length || 0;
   }
 
   advance(step) {
     const lt = step.letter;
     if (!lt) throw new Error("No letter defined in step");
+    if (this.length > this.view.maxX)
+      throw new Error(`length: ${this.length}, max: ${this.view.maxX}`);
     const next = this.nd[lt];
     if (!next) return null;
-    return new SearchPath(this.view, next, this, step);
+    return new SearchPath(this.view, next, this, step, this.length + 1);
   }
 
   skip() {
     let sp = this;
     const max = this.view.maxX;
-    for (let x = 0; x <= max; x++) {
+    for (let x = this.length; x <= max; x++) {
       const tile = this.view.tile(x, 0);
       if (!tile) break;
       const next = sp.advance({
@@ -51,18 +54,12 @@ class SearchPath {
       .sort();
   }
 
-  get length() {
-    if (this._length !== undefined)
-      return this._length;
-    return this._length = this.parent ? this.parent.length + 1 : 0;
+  flatten() {
+    let path = this.parent ? this.parent.flatten() : [];
+    if (this.step)
+      path.push(this.step);
+    return path;
   }
-
-    flatten() {
-      let path = this.parent ? this.parent.flatten() : [];
-      if (this.step)
-        path.push(this.step);
-      return path;
-    }
 
   get path() {
     return this._path = this._path || this.flatten();
@@ -71,6 +68,61 @@ class SearchPath {
   get word() {
     return this._word = this._word || this.path.map(p => p.letter)
       .join("");
+  }
+
+  // Gather score information for this match
+  _calculateScore(depth) {
+    const path = this.path;
+
+    let wordMultiplier = 1;
+    let score = 0;
+
+    const max = this.view.maxX;
+    for (const x in path) {
+      const cell = this.view.cell(x, 0);
+      const tile = path[x].tile;
+      let letterScore = tile.score;
+
+      // Multipliers only apply to empty cells
+      if (!cell.tile) {
+        for (const spec of cell.special) {
+          switch (spec.scope) {
+            case "letter":
+              letterScore *= spec.multiplier;
+              break;
+            case "word":
+              wordMultiplier *= spec.multiplier;
+              break;
+            default:
+              throw new Error("Bad special rule scope");
+          }
+        }
+      }
+
+      // Add scores for cross words
+      const cross = path[x].cross;
+      if (cross)
+        score += cross._calculateScore(depth + 1);
+
+      score += letterScore;
+    }
+
+    return score;
+  }
+
+  get score() {
+    return this._score = this._score || this._calculateScore(0);
+  }
+
+  toString() {
+    const path = this.path;
+    let desc = [];
+    for (const x in path) {
+      const pe = path[x];
+      const [cx, cy] = this.view.xy(x, 0);
+      desc.push(`[${cx}, ${cy}, ${pe.letter}]`);
+    }
+    return desc.join(", ");
   }
 }
 
@@ -102,7 +154,7 @@ class Search {
     const cv = view.recentre(x, 0)
       .flip()
       .moveLeft();
-    return new SearchPath(cv, this.trie)
+    return new SearchPath(cv, this.trie.root)
       .skip();
   }
 
