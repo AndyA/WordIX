@@ -214,8 +214,7 @@ class Rules {
 
     // Opening move?
     if (board.used === 0) {
-      const cx = Math.floor(board.width / 2);
-      const cy = Math.floor(board.height / 2);
+      const [cx, cy] = board.centre;
       for (let ofs = 0; ofs < this.rules.tray.size; ofs++) {
         sendCell(cx - ofs, cy, "across");
         sendCell(cx, cy - ofs, "down");
@@ -238,6 +237,16 @@ class Rules {
       return false;
     if (board.used)
       return play.adjoined;
+
+    // First move, has to cover cx, cy
+    const [cx, cy] = board.centre;
+
+    const v = play.match.view;
+    const [x0, y0] = v.xy(0, 0);
+    const [x1, y1] = v.xy(play.match.length - 1, 0);
+
+    return x0 <= cx || y0 <= cy || x1 >= cx && y1 >= cy;
+
     return !play.adjoined;
   }
 
