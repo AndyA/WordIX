@@ -26,33 +26,23 @@ function comparePlays(a, b) {
     a.word.localeCompare(b.word);
 }
 
-let limit = 100;
 while (game.canPlay) {
   const player = game.nextPlayer();
   console.log();
-  console.log("Player: " + player.tray + " (" + player.name + ")");
+  console.log(
+    `Player: ${player.tray} (${player.name}, score: ${player.score})`);
   const turn = new Turn(game, player);
   let plays = turn.possiblePlays;
   plays.sort(comparePlays);
-  if (0) {
-    for (const play of plays) {
-      console.log("word: " + play.word + ", origin: " + play.view.origin +
-        ", score: " + play.score);
-    }
-  }
 
   if (plays.length) {
     const play = plays.pop();
     console.log("word: " + play.word + ", origin: " + play.view.origin +
       ", score: " + play.score + ", adjoined: " + play.adjoined);
-    // console.log(JSON.stringify(play.path, null, 2));
     play.commit();
     game.fillTray(player);
     console.log(game.board.toString());
   }
-
-  if (--limit <= 0)
-    break;
 }
 
 // trie.match("SXLEN*I", word => console.log(word));
