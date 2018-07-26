@@ -117,12 +117,17 @@ class SearchPath {
   toString() {
     const path = this.path;
     let desc = [];
+    let cross = [];
     for (const x in path) {
       const pe = path[x];
       const [cx, cy] = this.view.xy(x, 0);
       desc.push(`[${cx}, ${cy}, ${pe.letter}]`);
+      if (pe.cross)
+        cross.push(pe.cross.toString());
     }
-    return desc.join(", ");
+    let rep = desc.join(", ");
+    if (cross.length) rep += " cross: " + cross.join(", ");
+    return "(" + rep + ")";
   }
 }
 
