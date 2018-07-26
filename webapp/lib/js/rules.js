@@ -130,6 +130,10 @@ class Rules {
     return this.rules.tray.size;
   }
 
+  get direction() {
+    return this.rules.board.direction;
+  }
+
   get flipper() {
     if (this._flipper)
       return this._flipper;
@@ -197,7 +201,7 @@ class Rules {
 
   // Visit each potentially playable cell.
   eachValid(board, cb) {
-    const directions = this.rules.board.direction;
+    const directions = this.direction;
 
     function sendCell(x, y, dir) {
       if (x >= 0 && y >= 0 && directions.indexOf(dir) >= 0)
