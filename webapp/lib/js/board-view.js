@@ -88,7 +88,7 @@ class BoardView {
       return this._word = "";
 
     let lt = [];
-    for (let x = 0; x < bb[2]; x++) {
+    for (let x = 0; x <= bb[2]; x++) {
       const tile = this.tile(x, 0);
       if (!tile) break;
       lt.push(tile.letter);
