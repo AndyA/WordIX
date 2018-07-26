@@ -233,35 +233,10 @@ class Rules {
     return !play.adjoined;
   }
 
-  computeWordScore(play) {
-    let score = 0;
-    let defer = 1;
-    const path = play.path;
-    for (let pos in path) {
-      let tileScore = path[pos].tile.score;
-      const cell = path[pos].cell;
-      if (cell.special && !cell.tile) {
-        for (const sp of cell.special) {
-          if (sp.scope === "letter")
-            tileScore *= sp.multiplier;
-          else if (sp.scope === "word")
-            defer *= sp.multiplier;
-          else
-            throw new Error("Bad scope: " + sp.scope);
-        }
-      }
-      score += tileScore;
-    }
-
+  computeBonus(play) {
     const played = play.path.length;
-
-    return score * defer + (this.rules.bonus[played] || 0);
+    return (this.rules.bonus[played] || 0);
   }
-
-  computeScore(play) {
-    return this.computeWordScore(play);
-  }
-
 }
 
 module.exports = Rules;
