@@ -9,7 +9,7 @@ class Transform {
       case "down":
         return [0, 1, 1, 0];
       default:
-        throw new Exception("Bad play direction: " + dir);
+        throw new Error("Bad play direction: " + dir);
     }
   }
 
