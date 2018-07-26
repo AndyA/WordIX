@@ -56,6 +56,13 @@ class Game {
   fillTray(player) {
     player.tray.fillFrom(this.bag, this.rules.traySize);
   }
+
+  sanityCheck() {
+    const words = this.board.words(this.rules.direction);
+    const invalid = words.filter(w => !this.trie.valid(w));
+    if (invalid.length)
+      throw new Error("Illegal words: " + invalid.join(", "));
+  }
 }
 
 module.exports = Game;
