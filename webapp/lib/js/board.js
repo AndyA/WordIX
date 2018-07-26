@@ -66,6 +66,10 @@ class Board {
         func(this.cell(x, y), x, y);
   }
 
+  get centre() {
+    return [this.width, this.height].map(x => Math.floor(x / 2));
+  }
+
   words(dir) {
     let words = [];
     this.each((cell, x, y) => {
