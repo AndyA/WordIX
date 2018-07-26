@@ -66,6 +66,20 @@ class Board {
         func(this.cell(x, y), x, y);
   }
 
+  words(dir) {
+    let words = [];
+    this.each((cell, x, y) => {
+      if (!cell.tile) return;
+      for (const d of dir) {
+        const v = this.view(x, y, d);
+        const word = v.word;
+        if (word.length > 1)
+          words.push(word);
+      }
+    });
+    return words;
+  }
+
   toString() {
     // Wildcards not working...
     return this.board.map(row => {

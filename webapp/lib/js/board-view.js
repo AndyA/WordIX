@@ -77,6 +77,24 @@ class BoardView {
     while (ofs >= min && this.tile(ofs, 0)) ofs--;
     return this.recentre(ofs + 1, 0);
   }
+
+  // Contiguous tiles from the start of the view
+  get word() {
+    if (this._word !== undefined)
+      return this._word;
+
+    const bb = this.bounds;
+    if (bb[0] < 0 && this.tile(-1, 0))
+      return this._word = "";
+
+    let lt = [];
+    for (let x = 0; x < bb[2]; x++) {
+      const tile = this.tile(x, 0);
+      if (!tile) break;
+      lt.push(tile.letter);
+    }
+    return this._word = lt.join("");
+  }
 }
 
 module.exports = BoardView;
