@@ -24,7 +24,8 @@ class Play {
   }
 
   get score() {
-    return this._score = this._score || this.rules.computeScore(this);
+    return this._score = this._score ||
+      this.match.score + this.rules.computeBonus(this);
   }
 
   get novel() {
@@ -60,6 +61,7 @@ class Play {
   commit() {
     this._takeFromRack();
     this._playTiles();
+    this.turn.player.score += this.score;
   }
 }
 
