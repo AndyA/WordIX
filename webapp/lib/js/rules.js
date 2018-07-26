@@ -199,6 +199,10 @@ class Rules {
     return new Bag(pile);
   }
 
+  letterScore(lt) {
+    return this.rules.letters.score[lt] || 0;
+  }
+
   // Visit each potentially playable cell.
   eachValid(board, cb) {
     const directions = this.direction;
