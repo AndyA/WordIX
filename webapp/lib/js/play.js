@@ -7,11 +7,11 @@ class Play {
     this.match = match;
 
     const fp = ArrayPicker.reverseIndex(match.path.map(x => x.bagPos));
+
     this.path = match.path.map((x, i) => {
-      return { ...x,
-        bagPos: fp[i],
-        cell: view.cell(i, 0)
-      }
+      x.relBagPos = fp[i];
+      x.cell = view.cell(i, 0);
+      return x;
     });
   }
 
@@ -30,7 +30,7 @@ class Play {
 
   get novel() {
     for (const i of this.match.path)
-      if (i.bagPos !== undefined)
+      if (i.relBagPos !== undefined)
         return true;
     return false;
 
@@ -38,29 +38,32 @@ class Play {
 
   get adjoined() {
     for (const i of this.match.path)
-      if (i.bagPos === undefined || i.cross)
+      if (i.relBagPos === undefined || i.cross)
         return true;
     return false;
   }
 
   _takeFromRack() {
-    const pick = this.path.map(x => x.bagPos)
+    const pick = this.path.map(x => x.relBagPos)
       .filter(x => x !== undefined);
-    this.turn.player.tray.pull(pick);
+    return this.turn.player.tray.pull(pick);
   }
 
   _playTiles() {
     for (const x in this.path) {
       const node = this.path[x];
-      node.tile.letter = node.letter;
-      this.view.cell(x, 0)
-        .tile = node.tile;
+      const cell = this.view.cell(x, 0);
+      if (!cell.tile) {
+        cell.tile = node.tile;
+        cell.tile.letter = node.letter;
+      }
     }
   }
 
   commit() {
     this._takeFromRack();
     this._playTiles();
+
     this.turn.player.score += this.score;
   }
 }

@@ -122,7 +122,7 @@ class SearchPath {
     for (const x in path) {
       const pe = path[x];
       const [cx, cy] = this.view.xy(x, 0);
-      desc.push(`[${cx}, ${cy}, ${pe.letter}]`);
+      desc.push(`[${cx}, ${cy}, ${pe.letter}, ${pe.bagPos || ""}]`);
       if (pe.cross)
         cross.push(pe.cross.toString());
     }
