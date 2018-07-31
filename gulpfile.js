@@ -121,7 +121,7 @@ function makeBundler(watch, mode) {
     });
 
     bundler.transform("babelify", {
-      presets: ["env", "react"]
+      presets: ["react", "env"]
     });
 
     if (mode === "live") {
