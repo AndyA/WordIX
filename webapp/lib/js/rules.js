@@ -245,9 +245,7 @@ class Rules {
     const [x0, y0] = v.xy(0, 0);
     const [x1, y1] = v.xy(play.match.length - 1, 0);
 
-    return x0 <= cx || y0 <= cy || x1 >= cx && y1 >= cy;
-
-    return !play.adjoined;
+    return x0 <= cx && x1 >= cx && y0 <= cy && y1 >= cy;
   }
 
   computeBonus(play) {
