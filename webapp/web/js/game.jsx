@@ -7,17 +7,35 @@ const Trie = require("trie");
 const Game = require("game");
 const Turn = require("turn");
 
+class TileView extends React.Component {
+  render() {
+    const tile = this.props.tile;
+    if (!tile) return null;
+    return (
+      <div className="tile">
+        <span className="letter">{tile.letter}</span>
+        <span className="score">{tile.score}</span>
+      </div>
+    );
+  }
+}
+
 class CellView extends React.Component {
   render() {
-    console.log(this.props.cell);
+    const cell = this.props.cell;
     let classes = ["cell"];
-    const special = this.props.cell.special;
+    const special = cell.special;
     if (special && special.length) {
       classes.push("special")
       for (const spec of special)
         classes.push(spec.scope, "x" + spec.multiplier);
     }
-    return <div className={classes.join(" ")}></div>;
+
+    return (
+      <div className={classes.join(" ")}>
+        <TileView tile={cell.tile}></TileView>
+      </div>
+    );
   }
 }
 
@@ -45,6 +63,11 @@ const dict = fetch("/data/enable.txt")
   .then(resp => resp.text())
   .then(text => text.split(/\s+/));
 
+function comparePlays(a, b) {
+  return a.score - b.score ||
+    a.word.localeCompare(b.word);
+}
+
 Promise.all([dict, ready()])
   .then((args) => {
     const [words] = args;
@@ -56,6 +79,24 @@ Promise.all([dict, ready()])
       trie,
       rules
     });
+
+    const player = game.nextPlayer();
+    console.log(
+      `Player: ${player.tray} (${player.name}, score: ${player.score})`);
+    const turn = new Turn(game, player);
+    let plays = turn.possiblePlays;
+    plays.sort(comparePlays);
+
+    if (plays.length) {
+      const play = plays.pop();
+      console.log("word: " + play.word + ", origin: " + play.view.origin +
+        ", score: " + play.score + ", adjoined: " + play.adjoined);
+      console.log(play.match.toString());
+      play.commit();
+      game.fillTray(player);
+      console.log(game.board.toString());
+      game.sanityCheck();
+    }
 
     ReactDOM.render(<GameView game={game}></GameView>, root);
   });
