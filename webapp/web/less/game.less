@@ -1,0 +1,41 @@
+.game {
+  .board {
+    background-color: @board-base;
+    padding-top: 5px;
+
+    .row {
+      margin-left: 3px;
+
+      .cell {
+        margin: 0 2px;
+        border-radius: 5px;
+        width: @cell-size;
+        height: @cell-size;
+        border-top: 1px solid @board-dark;
+        border-left: 1px solid @board-dark;
+        border-bottom: 1px solid @board-light;
+        border-right: 1px solid @board-light;
+        background-color: @cell-background;
+        display: inline-block;
+
+        &.special {
+          &.word.x2 {
+            background-color: @word-special-x2;
+          }
+
+          &.word.x3 {
+            background-color: @word-special-x3;
+          }
+
+          &.letter.x2 {
+            background-color: @letter-special-x2;
+          }
+
+          &.letter.x3 {
+            background-color: @letter-sepcial-x3;
+          }
+        }
+      }
+    }
+  }
+}

@@ -60,10 +60,16 @@ class Board {
     return new BoardView(this, new Transform(x, y, dir));
   }
 
-  each(func) {
+  eachRow(func) {
     for (let y = 0; y < this.height; y++)
+      func(this.board[y], y);
+  }
+
+  each(func) {
+    this.eachRow((row, y) => {
       for (let x = 0; x < this.width; x++)
-        func(this.cell(x, y), x, y);
+        func(row[x], x, y);
+    })
   }
 
   get centre() {
