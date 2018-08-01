@@ -132,7 +132,7 @@ function comparePlays(a, b) {
 
 function patchFunction(obj, funcName, dispFunc) {
   const origFunc = obj[funcName];
-  dispFunc = dispFunc || e => "";
+  // dispFunc = dispFunc || (e) => "";
 
   let proxy = function() {
     let args = Array.prototype.slice.call(arguments, 2);
