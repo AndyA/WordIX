@@ -1,7 +1,15 @@
+const Search = require("../webapp/lib/js/search");
 const Rules = require("../webapp/lib/js/rules");
 const Trie = require("../webapp/lib/js/trie");
 const Game = require("../webapp/lib/js/game");
 const Turn = require("../webapp/lib/js/turn");
+
+const _ = require("lodash");
+
+const {
+  performance,
+  PerformanceObserver
+} = require('perf_hooks');
 
 const patchRandom = require("../webapp/test/js/patch-random");
 
@@ -19,11 +27,33 @@ console.log("Loaded " + words.length + " words from " + WORDS);
 const trie = new Trie(words);
 const rules = new Rules();
 
-runGame(1);
-console.log("=============");
-runGame(2);
+// Preload trie cache
+trie.root;
 
-function runGame(seed) {
+patchFunction(Search.prototype, "match", e => {
+  const search = e[0];
+  return [
+    decodeView(search.view),
+    search.bag.map(x => x.toString())
+    .join("")
+  ].join("; ");
+});
+
+const obs = new PerformanceObserver(list => {
+  analysePerformance(list);
+  obs.disconnect();
+});
+
+obs.observe({
+  entryTypes: ['function'],
+  buffered: true
+});
+
+runGame(1, 3);
+
+function runGame(seed, maxPlays) {
+
+  maxPlays = maxPlays || 1000;
 
   patchRandom(seed);
 
@@ -33,6 +63,8 @@ function runGame(seed) {
   });
 
   while (game.canPlay) {
+    if (--maxPlays < 0)
+      break;
     const player = game.nextPlayer();
     console.log();
     console.log(
@@ -62,7 +94,94 @@ function runGame(seed) {
   }
 }
 
+function decodeDirection(dx, dy) {
+  if (dx === 1 && dy === 0)
+    return "across";
+  if (dx === 0 && dy === 1)
+    return "down";
+  return `unknown[${dx}, ${dy}]`;
+}
+
+function decodeView(v) {
+  const [ox, oy] = v.origin;
+  const [dx, dy] = v.xy(1, 0);
+  return [ox, oy, decodeDirection(dx - ox, dy - oy)].join(", ");
+}
+
+function _s(v) {
+  if (v === undefined)
+    return "undefined";
+  if (v === null)
+    return "null";
+  return "" + v;
+}
+
 function comparePlays(a, b) {
   return a.score - b.score ||
     a.word.localeCompare(b.word);
+}
+
+function patchFunction(obj, funcName, dispFunc) {
+  const origFunc = obj[funcName];
+
+  let proxy = function() {
+    let args = Array.prototype.slice.call(arguments, 2);
+    return origFunc.apply(this, args);
+  };
+  Object.defineProperty(proxy, "name", {
+    value: funcName
+  });
+  const shim = performance.timerify(proxy);
+
+  obj[funcName] = function() {
+    let args = Array.prototype.slice.call(arguments);
+    // Add dispFunc and this to every call
+    args.unshift(dispFunc);
+    args.unshift(this);
+    return shim.apply(this, args)
+  }
+}
+
+function formatEntry(e) {
+  const disp = e[1];
+  return [e.duration, disp(e)].join(", ");
+}
+
+function analyseEntries(list) {
+  if (!list.length)
+    return;
+
+  let sortedList = list.slice(0)
+    .sort((a, b) => {
+      return a.duration - b.duration || a.startTime - b.startTime
+    });
+
+  const duration = sortedList.map(e => e.duration);
+  const calls = duration.length;
+  const minDuration = _.min(duration);
+  const maxDuration = _.max(duration);
+  const totDuration = _.sum(duration);
+  const avgDuration = totDuration / calls;
+
+  const name = list[0].name;
+  console.log({
+    name,
+    calls,
+    minDuration,
+    maxDuration,
+    totDuration,
+    avgDuration,
+    fastest: formatEntry(sortedList[0]),
+    slowest: formatEntry(sortedList[calls - 1])
+  });
+}
+
+function analysePerformance(list) {
+  const entries = _.groupBy(list.getEntries(), e => e.name);
+
+  let kind = Object.keys(entries)
+    .sort();
+  for (const k of kind) {
+    analyseEntries(entries[k]);
+  }
 }
