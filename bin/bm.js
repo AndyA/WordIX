@@ -15,6 +15,15 @@ const patchRandom = require("../webapp/test/js/patch-random");
 
 const fs = require("fs");
 
+// { name: 'match',
+//   calls: 9126,
+//   minDuration: 0.010792,
+//   maxDuration: 37.314252,
+//   totDuration: 7637.021635999997,
+//   avgDuration: 0.8368421691869381,
+//   fastest: '0.010792, 14, 14, down; U',
+//   slowest: '37.314252, 1, 10, across; WAITA*N' }
+
 const WORDS = "ref/enable1.txt";
 
 let words = fs.readFileSync(WORDS)
@@ -49,7 +58,7 @@ obs.observe({
   buffered: true
 });
 
-runGame(1, 3);
+runGame(1);
 
 function runGame(seed, maxPlays) {
 
@@ -123,6 +132,7 @@ function comparePlays(a, b) {
 
 function patchFunction(obj, funcName, dispFunc) {
   const origFunc = obj[funcName];
+  dispFunc = dispFunc || e => "";
 
   let proxy = function() {
     let args = Array.prototype.slice.call(arguments, 2);
