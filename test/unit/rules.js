@@ -111,7 +111,7 @@ describe("Rules", () => {
     ];
 
     function sortMoves(moves) {
-      return moves.slice(0)
+      return moves.slice()
         .sort((a, b) => a[0] - b[0] || a[1] - b[1] || a[2].localeCompare(
           b[2]));
     }

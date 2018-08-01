@@ -236,7 +236,7 @@ class Search {
         if (!nextPath) continue;
 
         if (!nextBag) {
-          nextBag = bag.slice(0);
+          nextBag = bag.slice();
           nextBag.splice(bagPos, 1);
         }
 

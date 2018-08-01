@@ -3,7 +3,7 @@ const _ = require("lodash");
 class ArrayPicker {
 
   static adjustIndex(idx) {
-    let src = idx.slice(0);
+    let src = idx.slice();
     let out = [];
 
     while (src.length) {
@@ -17,7 +17,7 @@ class ArrayPicker {
   }
 
   static reverseIndex(idx) {
-    let src = idx.slice(0);
+    let src = idx.slice();
     let step = [];
     let out = [];
 

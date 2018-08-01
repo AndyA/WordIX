@@ -161,7 +161,7 @@ function analyseEntries(list) {
   if (!list.length)
     return;
 
-  let sortedList = list.slice(0)
+  let sortedList = list.slice()
     .sort((a, b) => {
       return a.duration - b.duration || a.startTime - b.startTime
     });

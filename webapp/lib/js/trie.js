@@ -5,7 +5,7 @@ const makeTile = require("./tile")
 
 class Trie {
   constructor(words) {
-    this.words = words.slice(0);
+    this.words = words.slice();
     this.words.sort();
   }
 

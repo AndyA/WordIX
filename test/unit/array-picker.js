@@ -24,7 +24,7 @@ function fillRange(n) {
 
 function collect(src, pick) {
   let out = [];
-  let p = pick.slice(0);
+  let p = pick.slice();
   while (p.length)
     out.push(...src.splice(p.shift(), 1));
   return out;
@@ -50,8 +50,8 @@ function testPicker(count, func) {
     const pickLength = Math.floor(Math.random() * srcLength);
 
     let src = fillRange(srcLength);
-    let original = src.slice(0);
-    let idx = shuffle(src.slice(0)).splice(0, pickLength);
+    let original = src.slice();
+    let idx = shuffle(src.slice()).splice(0, pickLength);
 
     let out = func(src, idx);
 

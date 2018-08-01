@@ -69,7 +69,7 @@ describe("Search", () => {
       ]);
 
       function testMatches(bag, view, words) {
-        let sortedWords = words.slice(0)
+        let sortedWords = words.slice()
           .sort();
         const search = new Search(trie, view, bag);
         let found = search.matches();
