@@ -136,7 +136,7 @@ class Search {
   constructor(trie, view, bag) {
     this.trie = trie;
     this.view = view;
-    this.bag = bag;
+    this.bag = this._tiles(bag);
     this._cp = {};
   }
 
@@ -246,10 +246,8 @@ class Search {
   }
 
   match(cb) {
-    const tiles = this._tiles(this.bag);
-
     this._match(new SearchPath(this.view, this.trie.root),
-      tiles, cb);
+      this.bag, cb);
   }
 
   matches() {
