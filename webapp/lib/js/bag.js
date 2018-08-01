@@ -28,7 +28,8 @@ class Bag {
   }
 
   toString() {
-    return this.tiles.map(x => x.toString()).join(" | ");
+    return this.tiles.map(x => x.toString())
+      .join(" | ");
   }
 }
 
