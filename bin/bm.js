@@ -15,6 +15,8 @@ const patchRandom = require("../webapp/test/js/patch-random");
 
 const fs = require("fs");
 
+// Initial baseline:
+//
 // { name: 'match',
 //   calls: 37538,
 //   minDuration: 0.004237,
@@ -23,6 +25,17 @@ const fs = require("fs");
 //   avgDuration: 0.6625125597527821,
 //   fastest: '0.004237, 7, 14, down; J',
 //   slowest: '78.947384, 1, 0, down; AR*ENAR' }
+//
+// Only match in valid cells:
+//
+// { name: 'match',
+//   calls: 20408,
+//   minDuration: 0.005755,
+//   maxDuration: 74.72755,
+//   totDuration: 8710.794910000006,
+//   avgDuration: 0.42683236524892226,
+//   fastest: '0.005755, 9, 0, down; U',
+//   slowest: '74.72755, 8, 0, down; UEEO*TI' }
 
 const WORDS = "ref/enable1.txt";
 

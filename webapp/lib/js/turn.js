@@ -21,7 +21,7 @@ class Turn {
     const tray = this.player.tray;
 
     let tried = {};
-    rules.eachValid(board, (x, y, dir) => {
+    rules.eachValid(board, tray.size, (x, y, dir) => {
       const v = board.view(x, y, dir)
         .moveLeft();
       const key = [v.origin.join(", "), dir].join(" ");

@@ -78,6 +78,31 @@ class BoardView {
     return this.recentre(ofs + 1, 0);
   }
 
+  wouldTouch(len) {
+    const [xmin, ymin, xmax, ymax] = this.bounds;
+
+    if (len === undefined || len > xmax + 1)
+      len = xmax + 1;
+
+    // Is there a tile behind us?
+    if (xmin < 0 && this.tile(-1, 0))
+      return true;
+
+    // Look along the sides.
+    for (let x = 0; x < len; x++) {
+      if (ymin < 0 && this.tile(x, -1))
+        return true;
+      if (ymax > 0 && this.tile(x, 1))
+        return true;
+    }
+
+    // Is there a tile at the end?
+    if (xmax > len && this.tile(len, 0))
+      return true;
+
+    return false;
+  }
+
   // Contiguous tiles from the start of the view
   get word() {
     if (this._word !== undefined)

@@ -204,12 +204,20 @@ class Rules {
   }
 
   // Visit each potentially playable cell.
-  eachValid(board, cb) {
+  eachValid(board, len, cb) {
     const directions = this.direction;
 
     function sendCell(x, y, dir) {
-      if (x >= 0 && y >= 0 && directions.indexOf(dir) >= 0)
-        cb(x, y, dir);
+      if (x < 0 || y < 0 || directions.indexOf(dir) < 0)
+        return;
+
+      if (board.used) {
+        const v = board.view(x, y, dir);
+        if (!v.wouldTouch(len))
+          return;
+      }
+
+      cb(x, y, dir);
     }
 
     // Opening move?
