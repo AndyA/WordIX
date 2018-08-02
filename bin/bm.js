@@ -16,13 +16,13 @@ const patchRandom = require("../webapp/test/js/patch-random");
 const fs = require("fs");
 
 // { name: 'match',
-//   calls: 9126,
-//   minDuration: 0.010792,
-//   maxDuration: 37.314252,
-//   totDuration: 7637.021635999997,
-//   avgDuration: 0.8368421691869381,
-//   fastest: '0.010792, 14, 14, down; U',
-//   slowest: '37.314252, 1, 10, across; WAITA*N' }
+//   calls: 37538,
+//   minDuration: 0.004237,
+//   maxDuration: 78.947384,
+//   totDuration: 24869.396467999934,
+//   avgDuration: 0.6625125597527821,
+//   fastest: '0.004237, 7, 14, down; J',
+//   slowest: '78.947384, 1, 0, down; AR*ENAR' }
 
 const WORDS = "ref/enable1.txt";
 
@@ -58,7 +58,8 @@ obs.observe({
   buffered: true
 });
 
-runGame(1);
+for (let seed = 1; seed < 5; seed++)
+  runGame(seed);
 
 function runGame(seed, maxPlays) {
 
