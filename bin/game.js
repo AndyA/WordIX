@@ -39,7 +39,7 @@ while (game.canPlay && skip < game.players.length) {
   if (plays.length) {
     const play = plays.pop();
     console.log("word: " + play.word + ", origin: " + play.view.origin +
-      ", score: " + play.score + ", adjoined: " + play.adjoined);
+      ", score: " + play.score);
     console.log(play.match.toString());
     play.commit();
     game.fillTray(player);
