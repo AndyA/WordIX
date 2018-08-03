@@ -26,7 +26,8 @@ function comparePlays(a, b) {
     a.word.localeCompare(b.word);
 }
 
-while (game.canPlay) {
+let skip = 0;
+while (game.canPlay && skip < game.players.length) {
   const player = game.nextPlayer();
   console.log();
   console.log(
@@ -44,6 +45,9 @@ while (game.canPlay) {
     game.fillTray(player);
     console.log(game.board.toString());
     game.sanityCheck();
+    skip = 0;
+  } else {
+    skip++;
   }
 }
 
