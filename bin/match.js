@@ -16,10 +16,12 @@ const trie = new Trie(words);
 for (const word of process.argv.slice(2)) {
   const search = new Search(trie, makeView("", 20), word);
   const matches = search.matches();
-  const words = matches.map(m => m.word).sort((a, b) => {
-    return a.length - b.length || a.localeCompare(b);
-  })
-  console.log(word + ": " + words.join(", "));
+  const words = matches.map(m => m.word)
+    .sort((a, b) => {
+      return a.length - b.length || a.localeCompare(b);
+    });
+  for (const w of words)
+    console.log(w);
 }
 
 function makeView(word, size) {
