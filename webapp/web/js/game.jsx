@@ -14,7 +14,7 @@ class TileView extends React.Component {
     return (
       <div className="tile">
         <span className="letter">{tile.letter}</span>
-        <span className="score">{tile.score}</span>
+        {tile.score > 0 && <span className="score">{tile.score}</span>}
       </div>
     );
   }
