@@ -4,7 +4,7 @@ const Trie = require("../webapp/lib/js/trie");
 
 const fs = require("fs");
 
-const WORDS = "ref/enable1.txt";
+const WORDS = "ref/enable2k.txt";
 
 let words = fs.readFileSync(WORDS)
   .toString()
