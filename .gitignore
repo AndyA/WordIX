@@ -1,3 +1,4 @@
-/node_modules/
-*.gz
 *.bz2
+*.gz
+/node_modules/
+/tmp/
