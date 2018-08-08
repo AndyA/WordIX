@@ -80,20 +80,17 @@ class AutoPlayGameView extends GameView {
   nextPlay() {
     const game = this.state.game;
     const player = game.nextPlayer();
-    console.log(
-      `Player: ${player.tray} (${player.name}, score: ${player.score})`);
+
     const turn = new Turn(game, player);
     let plays = turn.possiblePlays;
     plays.sort(comparePlays);
 
     if (plays.length) {
       const play = plays.pop();
-      console.log("word: " + play.word + ", origin: " + play.view.origin +
-        ", score: " + play.score + ", adjoined: " + play.adjoined);
-      console.log(play.match.toString());
+
       play.commit();
       game.fillTray(player);
-      console.log(game.board.toString());
+
       game.sanityCheck();
       this.skip = 0;
     } else {
