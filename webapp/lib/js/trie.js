@@ -4,8 +4,9 @@ const makeTile = require("./tile")
   .makeTile;
 
 class Trie {
-  constructor(words) {
+  constructor(words, root = null) {
     this.words = words;
+    this._root = root;
   }
 
   _trieLevel(lo, hi, rank) {
@@ -57,6 +58,48 @@ class Trie {
       nd = nextNode;
     }
     return !!nd["*"];
+  }
+
+  encode() {
+    let enc = [];
+
+    function encodeNode(nd) {
+      for (const lt in nd) {
+        enc.push(lt);
+        encodeNode(nd[lt]);
+      }
+      enc.push(".");
+    }
+
+    encodeNode(this.root);
+
+    return enc.join("")
+      .replace(/\*\./g, "*")
+      .replace(/(\.+)/g, (m, p1) => p1.length);
+  }
+
+  static decode(rep) {
+    let dots = ".";
+    let pos = 0;
+
+    const exp = rep.replace(/(\d+)/g, (m, p1) => {
+        while (dots.length < p1)
+          dots = dots + dots;
+        return dots.substr(0, p1);
+      })
+      .replace(/\*/g, "*.");
+
+    function decodeNode() {
+      let nd = {};
+      while (pos < exp.length) {
+        const lt = exp[pos++];
+        if (lt === ".") break;
+        nd[lt] = decodeNode();
+      }
+      return nd;
+    }
+
+    return new Trie(null, decodeNode());
   }
 }
 

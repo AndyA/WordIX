@@ -9,6 +9,24 @@ const Board = require("../../webapp/lib/js/board.js");
 const makeTile = require("../../webapp/lib/js/tile.js")
   .makeTile;
 
+function randomWord() {
+  const len = Math.floor(Math.random() * Math.random() * 15 + 2);
+  let word = [];
+  for (let i = 0; i < len; i++) {
+    const lt = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+    word.push(lt);
+  }
+  return word.join("");
+}
+
+function randomWords(count) {
+  let words = [];
+  for (let i = 0; i < count; i++)
+    words.push(randomWord());
+  words.sort();
+  return words;
+}
+
 describe("Trie", () => {
   const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",
     "FLOATER", "FLOATS"
@@ -120,6 +138,17 @@ describe("Trie", () => {
 
       expect(trie.root)
         .to.deep.equal(want);
+    });
+  });
+
+  describe("Encoding", () => {
+    it("should correctly encode/decode", () => {
+      const words = randomWords(3000);
+      const trie = new Trie(words);
+      const rep = trie.encode();
+      const clone = Trie.decode(rep);
+      expect(clone.root)
+        .to.deep.equal(trie.root);
     });
   });
 
