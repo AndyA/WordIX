@@ -106,6 +106,7 @@ class AutoPlayGameView extends GameView {
         game
       });
     } else {
+      this.skip = 0;
       this.setState({
         game: this.props.gameFactory()
       });
