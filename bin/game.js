@@ -5,7 +5,7 @@ const Turn = require("../webapp/lib/js/turn");
 
 const fs = require("fs");
 
-const WORDS = "ref/dict.txt";
+const WORDS = "ref/enable2k.txt";
 
 let words = fs.readFileSync(WORDS)
   .toString()
