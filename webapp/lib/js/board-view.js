@@ -103,6 +103,17 @@ class BoardView {
     return false;
   }
 
+  playPath(path) {
+    for (const x in path) {
+      const node = path[x];
+      const cell = this.cell(x, 0);
+      if (!cell.tile) {
+        cell.tile = node.tile;
+        cell.tile.letter = node.letter;
+      }
+    }
+  }
+
   // Contiguous tiles from the start of the view
   get word() {
     if (this._word !== undefined)

@@ -49,20 +49,9 @@ class Play {
     return this.turn.player.tray.pull(pick);
   }
 
-  _playTiles() {
-    for (const x in this.path) {
-      const node = this.path[x];
-      const cell = this.view.cell(x, 0);
-      if (!cell.tile) {
-        cell.tile = node.tile;
-        cell.tile.letter = node.letter;
-      }
-    }
-  }
-
   commit() {
     this._takeFromRack();
-    this._playTiles();
+    this.view.playPath(this.path);
 
     this.turn.player.score += this.score;
   }
