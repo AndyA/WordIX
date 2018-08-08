@@ -54,7 +54,7 @@ class BoardView extends React.Component {
 class GameView extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props;
+    // this.state = props;
   }
 
   render() {
@@ -68,6 +68,9 @@ class AutoPlayGameView extends GameView {
   constructor(props) {
     super(props);
     this.skip = 0;
+    this.state = {
+      game: this.props.gameFactory()
+    }
   }
 
   componentDidMount() {
@@ -105,8 +108,12 @@ class AutoPlayGameView extends GameView {
       this.setState({
         game
       });
-      setTimeout(this.ticker.bind(this), 2000);
+    } else {
+      this.setState({
+        game: this.props.gameFactory()
+      });
     }
+    setTimeout(this.ticker.bind(this), 2000);
   }
 }
 
@@ -131,5 +138,14 @@ Promise.all([dict, ready()])
       rules
     });
 
-    ReactDOM.render(<AutoPlayGameView game={game}></AutoPlayGameView>, root);
+    function gameFactory() {
+      return new Game({
+        trie,
+        rules
+      });
+    }
+
+    ReactDOM.render(
+      <AutoPlayGameView gameFactory={gameFactory}></AutoPlayGameView>,
+      root);
   });
