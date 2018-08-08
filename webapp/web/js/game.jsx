@@ -52,10 +52,61 @@ class BoardView extends React.Component {
 }
 
 class GameView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = props;
+  }
+
   render() {
     return <div className="game">
-      <BoardView board={this.props.game.board}></BoardView>
+      <BoardView board={this.state.game.board}></BoardView>
     </div>;
+  }
+}
+
+class AutoPlayGameView extends GameView {
+  constructor(props) {
+    super(props);
+    this.skip = 0;
+  }
+
+  componentDidMount() {
+    this.ticker();
+  }
+
+  nextPlay() {
+    const game = this.state.game;
+    const player = game.nextPlayer();
+    console.log(
+      `Player: ${player.tray} (${player.name}, score: ${player.score})`);
+    const turn = new Turn(game, player);
+    let plays = turn.possiblePlays;
+    plays.sort(comparePlays);
+
+    if (plays.length) {
+      const play = plays.pop();
+      console.log("word: " + play.word + ", origin: " + play.view.origin +
+        ", score: " + play.score + ", adjoined: " + play.adjoined);
+      console.log(play.match.toString());
+      play.commit();
+      game.fillTray(player);
+      console.log(game.board.toString());
+      game.sanityCheck();
+      this.skip = 0;
+    } else {
+      this.skip++;
+    }
+  }
+
+  ticker() {
+    const game = this.state.game;
+    if (game.canPlay && this.skip < game.players.length) {
+      this.nextPlay();
+      this.setState({
+        game
+      });
+      setInterval(this.ticker.bind(this), 1000);
+    }
   }
 }
 
@@ -80,23 +131,5 @@ Promise.all([dict, ready()])
       rules
     });
 
-    const player = game.nextPlayer();
-    console.log(
-      `Player: ${player.tray} (${player.name}, score: ${player.score})`);
-    const turn = new Turn(game, player);
-    let plays = turn.possiblePlays;
-    plays.sort(comparePlays);
-
-    if (plays.length) {
-      const play = plays.pop();
-      console.log("word: " + play.word + ", origin: " + play.view.origin +
-        ", score: " + play.score + ", adjoined: " + play.adjoined);
-      console.log(play.match.toString());
-      play.commit();
-      game.fillTray(player);
-      console.log(game.board.toString());
-      game.sanityCheck();
-    }
-
-    ReactDOM.render(<GameView game={game}></GameView>, root);
+    ReactDOM.render(<AutoPlayGameView game={game}></AutoPlayGameView>, root);
   });
