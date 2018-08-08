@@ -2,9 +2,17 @@ const BoardView = require("./board-view")
 const Transform = require("./transform");
 
 class Cell {
-  constructor(tile, special) {
-    this.tile = tile || null;
-    this.special = special || [];
+  constructor(board, tile = null, special = []) {
+    this.board = board;
+    this.tile = tile;
+    this.special = special;
+    this.generation = null;
+  }
+
+  get age() {
+    if (this.generation === null)
+      return null;
+    return this.board.generation - this.generation;
   }
 }
 
@@ -15,6 +23,8 @@ class Board {
       height: 15,
     }, opt);
 
+    this.generation = 0;
+
     if (!this.board)
       this.clear();
   }
@@ -24,7 +34,7 @@ class Board {
     for (let y = 0; y < this.height; y++) {
       let row = [];
       for (let x = 0; x < this.width; x++)
-        row.push(new Cell);
+        row.push(new Cell(this));
       board.push(row);
     }
     return board;
@@ -48,6 +58,10 @@ class Board {
 
   get free() {
     return this.size - this.used;
+  }
+
+  nextGeneration() {
+    return ++this.generation;
   }
 
   cell(x, y) {
