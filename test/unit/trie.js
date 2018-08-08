@@ -88,6 +88,17 @@ describe("Trie", () => {
     });
   });
 
+  describe("Exceptions", () => {
+    it("should reject unordered words", () => {
+      function outOfOrder() {
+        return new Trie(["AC", "AE", "AD"])
+          .root;
+      }
+      expect(outOfOrder)
+        .to.throw("sorted");
+    });
+  });
+
   describe("Duplicates OK?", () => {
     it("should ignore duplicates", () => {
       const trie = new Trie(["AAA", "AAA", "AAB", "AAC", "AAC"]);

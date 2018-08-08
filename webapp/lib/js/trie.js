@@ -5,8 +5,7 @@ const makeTile = require("./tile")
 
 class Trie {
   constructor(words) {
-    this.words = words.slice();
-    this.words.sort();
+    this.words = words;
   }
 
   _trieLevel(lo, hi, rank, ctx) {
@@ -22,6 +21,8 @@ class Trie {
         if (prevLetter === undefined)
           prevLetter = letter;
         if (prevLetter !== letter) {
+          if (letter < prevLetter)
+            throw new Error("Words must be sorted");
           nd[prevLetter] = this._trieLevel(prevPos, pos, rank + 1);
           [prevPos, prevLetter] = [pos, letter];
         }
