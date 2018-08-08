@@ -23,7 +23,7 @@ class TileView extends React.Component {
 class CellView extends React.Component {
   render() {
     const cell = this.props.cell;
-    let classes = ["cell"];
+    let classes = ["cell", "age-" + cell.age];
     const special = cell.special;
     if (special && special.length) {
       classes.push("special")
@@ -105,7 +105,7 @@ class AutoPlayGameView extends GameView {
       this.setState({
         game
       });
-      setInterval(this.ticker.bind(this), 1000);
+      setTimeout(this.ticker.bind(this), 2000);
     }
   }
 }
