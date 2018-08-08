@@ -1,6 +1,6 @@
 body {
   font-family: Arial, Helvetica;
-  color: #555;
+  color: @text-color;
 }
 
 .game {
@@ -23,6 +23,9 @@ body {
         border-right: 1px solid @board-light;
         background-color: @cell-background;
         display: inline-block;
+        color: @old-tile-color;
+
+        &.age-0 { color: @new-tile-color; }
 
         &.special {
           &.word.x2 {
