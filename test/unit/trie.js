@@ -1,7 +1,7 @@
 "use strict";
 
-var chai = require("chai");
-var expect = chai.expect;
+const chai = require("chai");
+const expect = chai.expect;
 
 const Trie = require("../../webapp/lib/js/trie.js")
 const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
