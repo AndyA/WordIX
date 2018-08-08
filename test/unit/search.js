@@ -172,32 +172,62 @@ describe("Search", () => {
 
     describe("Scoring", () => {
       const testCases = [{
-        board: [
-          //123456789ABCDE
-          "               ", // 0
-          "               ", // 1
-          "               ", // 2
-          "       P       ", // 3
-          "       E       ", // 4
-          "       R       ", // 5
-          "       V       ", // 6
-          "       S       ", // 7
-          "               ", // 8
-          "               ", // 9
-          "               ", // A
-          "               ", // B
-          "               ", // C
-          "               ", // D
-          "               ", // E
-        ],
-        bag: "QWERTIE",
-        word: "QWERTIES",
-        x: 0,
-        y: 7,
-        dir: "across",
-        score: [63],
-        want: ["QWERTIES"]
-      }, ];
+          board: [
+            //123456789ABCDE
+            "               ", // 0
+            "               ", // 1
+            "               ", // 2
+            "       P       ", // 3
+            "       E       ", // 4
+            "       R       ", // 5
+            "       V       ", // 6
+            "       S       ", // 7
+            "               ", // 8
+            "               ", // 9
+            "               ", // A
+            "               ", // B
+            "               ", // C
+            "               ", // D
+            "               ", // E
+          ],
+          bag: "QWERTIE",
+          word: "QWERTIES",
+          x: 0,
+          y: 7,
+          dir: "across",
+          score: [63],
+          want: ["QWERTIES"]
+        },
+        {
+          board: [
+            //123456789ABCDE
+            " E J        E  ", // 0
+            " X U A      Y  ", // 1
+            " UNDULY  W  E  ", // 2
+            " R O LATHINGS  ", // 3
+            " B  RE   D  P  ", // 4
+            " I NAEVOID  O  ", // 5
+            "KA  T    E  T  ", // 6
+            "O   TOFT R     ", // 7
+            "I  PIMA  S     ", // 8
+            "    E V        ", // 9
+            "   ARIOSOS     ", // A
+            "CZAR  R        ", // B
+            "      E        ", // C
+            "    ENDLONG    ", // D
+            "               ", // E
+
+          ],
+          bag: "AE",
+          word: "AE",
+          extra: ["EX"],
+          x: 0,
+          y: 0,
+          dir: "down",
+          score: [21],
+          want: ["AE"]
+        },
+      ];
 
       for (const tc of testCases) {
         it(`should score correctly (${tc.word})`, () => {
@@ -205,6 +235,7 @@ describe("Search", () => {
           const [b, r] = makeBoard(rules, tc.board);
           let dict = b.words(r.direction);
           dict.push(tc.word);
+          Array.prototype.push.apply(dict, tc.extra || []);
           dict.sort();
           const trie = new Trie(dict);
           const v = b.view(tc.x, tc.y, tc.dir);
