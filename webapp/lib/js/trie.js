@@ -8,7 +8,7 @@ class Trie {
     this.words = words;
   }
 
-  _trieLevel(lo, hi, rank, ctx) {
+  _trieLevel(lo, hi, rank) {
     const words = this.words;
 
     let prevLetter, prevPos = lo,
@@ -21,7 +21,7 @@ class Trie {
         if (prevLetter === undefined)
           prevLetter = letter;
         if (prevLetter !== letter) {
-          if (letter < prevLetter)
+          if (letter < prevLetter && letter !== "*")
             throw new Error("Words must be sorted");
           nd[prevLetter] = this._trieLevel(prevPos, pos, rank + 1);
           [prevPos, prevLetter] = [pos, letter];
