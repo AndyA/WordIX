@@ -110,7 +110,7 @@ class AutoPlayGameView extends GameView {
         game: this.props.gameFactory()
       });
     }
-    setTimeout(this.ticker.bind(this), 2000);
+    setTimeout(this.ticker.bind(this), 1000);
   }
 }
 
