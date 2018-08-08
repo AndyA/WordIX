@@ -25,7 +25,9 @@ body {
         display: inline-block;
         color: @old-tile-color;
 
-        &.age-0 { color: @new-tile-color; }
+        &.age-0 { color: mix(@new-tile-color, @old-tile-color, 100%); }
+        &.age-1 { color: mix(@new-tile-color, @old-tile-color, 66%); }
+        &.age-2 { color: mix(@new-tile-color, @old-tile-color, 33%); }
 
         &.special {
           &.word.x2 {
