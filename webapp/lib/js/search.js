@@ -77,6 +77,7 @@ class SearchPath {
 
     let wordMultiplier = 1;
     let score = 0;
+    let crossScore = 0;
 
     const max = this.view.maxX;
     for (const x in path) {
@@ -100,15 +101,15 @@ class SearchPath {
         }
       }
 
+      score += letterScore;
+
       // Add scores for cross words
       const cross = path[x].cross;
       if (cross)
-        score += cross._calculateScore(depth + 1);
-
-      score += letterScore;
+        crossScore += cross._calculateScore(depth + 1);
     }
 
-    return score;
+    return score * wordMultiplier + crossScore;
   }
 
   get score() {

@@ -22,11 +22,10 @@ function groupWords(found) {
   return byWord;
 }
 
-function makeBoard(spec) {
+function makeBoard(rules, spec) {
   const height = spec.length;
   const width = Math.max.apply(null, spec.map(row => row.length));
 
-  const rules = new Rules;
   let board = rules.makeBoard();
   if (board.width != width || board.height != height)
     throw new Error(`Board size mismatch: ` +
@@ -43,6 +42,11 @@ function makeBoard(spec) {
   }
 
   return [board, rules];
+}
+
+function makeBag(rules, letters) {
+  return letters.split("")
+    .map(lt => makeTile(lt, rules.letterScore(lt)));
 }
 
 function makeView(word, size) {
@@ -166,10 +170,58 @@ describe("Search", () => {
       });
     });
 
+    describe("Scoring", () => {
+      const testCases = [{
+        board: [
+          //123456789ABCDE
+          "               ", // 0
+          "               ", // 1
+          "               ", // 2
+          "       P       ", // 3
+          "       E       ", // 4
+          "       R       ", // 5
+          "       V       ", // 6
+          "       S       ", // 7
+          "               ", // 8
+          "               ", // 9
+          "               ", // A
+          "               ", // B
+          "               ", // C
+          "               ", // D
+          "               ", // E
+        ],
+        bag: "QWERTIE",
+        word: "QWERTIES",
+        x: 0,
+        y: 7,
+        dir: "across",
+        score: [63],
+        want: ["QWERTIES"]
+      }, ];
+
+      for (const tc of testCases) {
+        it(`should score correctly (${tc.word})`, () => {
+          const rules = new Rules;
+          const [b, r] = makeBoard(rules, tc.board);
+          let dict = b.words(r.direction);
+          dict.push(tc.word);
+          dict.sort();
+          const trie = new Trie(dict);
+          const v = b.view(tc.x, tc.y, tc.dir);
+          const search = new Search(trie, v, makeBag(rules, tc.bag));
+          const match = search.matches();
+          expect(match.map(m => m.word))
+            .to.deep.equal(tc.want);
+          expect(match.map(m => m.score))
+            .to.deep.equal(tc.score);
+        });
+      }
+
+    });
+
     describe("Bugs", () => {
       describe("Invalid cross plays", () => {
-        const testCases = [
-          {
+        const testCases = [{
             board: [
               "      M        ",
               "    TRICLAD    ",
@@ -225,7 +277,7 @@ describe("Search", () => {
 
         for (const tc of testCases) {
           it(`should play correctly (${tc.word})`, () => {
-            const [b, r] = makeBoard(tc.board);
+            const [b, r] = makeBoard(new Rules, tc.board);
             let dict = b.words(r.direction);
             dict.push(tc.word);
             Array.prototype.push.apply(dict, tc.extra || []);
