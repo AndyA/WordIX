@@ -15,7 +15,7 @@ class Trie {
       nd = {};
 
     for (let pos = lo; pos < hi; pos++) {
-      const word = this.words[pos];
+      const word = words[pos];
       if (rank <= word.length) {
         const letter = rank == word.length ? "*" : word[rank];
         if (prevLetter === undefined)
