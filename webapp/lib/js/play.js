@@ -52,7 +52,7 @@ class Play {
   commit() {
     this._takeFromRack();
     this.view.playPath(this.path);
-
+    
     this.turn.player.score += this.score;
   }
 }
