@@ -28,7 +28,7 @@ function comparePlays(a, b) {
 
 let skip = 0;
 while (game.canPlay && skip < game.players.length) {
-  const player = game.nextPlayer();
+  const player = game.startMove();
   console.log();
   console.log(
     `Player: ${player.tray} (${player.name}, score: ${player.score})`);
@@ -44,7 +44,7 @@ while (game.canPlay && skip < game.players.length) {
     play.commit();
     game.fillTray(player);
     console.log(game.board.toString());
-    game.sanityCheck();
+    game.endMove();
     skip = 0;
   } else {
     skip++;

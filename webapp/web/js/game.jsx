@@ -69,7 +69,6 @@ class GameView extends React.Component {
 class AutoPlayGameView extends GameView {
   constructor(props) {
     super(props);
-    this.skip = 0;
     this.state = {
       game: this.props.gameFactory()
     }
@@ -81,17 +80,15 @@ class AutoPlayGameView extends GameView {
 
   nextPlay() {
     const game = this.state.game;
-    const player = game.nextPlayer();
+    const player = game.startMove();
 
     const turn = new Turn(game, player);
     const plays = player.strategy.findPlays(turn);
 
     if (plays.length) {
       const play = plays.pop();
-      play.play();
-      this.skip = 0;
-    } else {
-      this.skip++;
+      play.commit();
+      game.endMove();
     }
   }
 

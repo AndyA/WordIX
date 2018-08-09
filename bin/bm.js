@@ -88,7 +88,7 @@ function runGame(seed, maxPlays) {
   while (game.canPlay) {
     if (--maxPlays < 0)
       break;
-    const player = game.nextPlayer();
+    const player = game.startMove();
     console.log();
     console.log(
       `Player: ${player.tray} (${player.name}, score: ${player.score})`);
@@ -104,7 +104,7 @@ function runGame(seed, maxPlays) {
       play.commit();
       game.fillTray(player);
       console.log(game.board.toString());
-      game.sanityCheck();
+      game.endMove();
     }
   }
 

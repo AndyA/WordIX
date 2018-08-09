@@ -11,7 +11,8 @@ class Game extends MW.mix(Object)
       super();
       Object.assign(this, {
         players: 2,
-        next: 0
+        next: 0,
+        skipped: 0
       }, opt);
 
       if (!this.rules)
@@ -48,19 +49,22 @@ class Game extends MW.mix(Object)
     }
 
     get canPlay() {
+      if (this.skipped >= this.players.length)
+        return false;
       for (const p of this.players)
         if (p.tray.size === 0)
           return false;
       return true;
     }
 
-    nextPlayer() {
-      const p = this.players[this.next++];
+    startMove() {
+      this.currentPlayer = this.players[this.next++];
       if (this.next == this.players.length)
         this.next = 0;
       // Bump global generation
       this.nextGeneration();
-      return p;
+      this.skipped++; // in case we don't play
+      return this.currentPlayer;
     }
 
     fillTray(player) {
@@ -72,6 +76,13 @@ class Game extends MW.mix(Object)
       const invalid = words.filter(w => !this.trie.valid(w));
       if (invalid.length)
         throw new Error("Illegal words: " + invalid.join(", "));
+    }
+
+    endMove() {
+      this.skipped = 0;
+      this.fillTray(this.currentPlayer);
+      this.touch();
+      this.sanityCheck();
     }
 
     get words() {
