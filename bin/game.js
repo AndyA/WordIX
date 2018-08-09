@@ -21,20 +21,13 @@ const game = new Game({
   rules
 });
 
-function comparePlays(a, b) {
-  return a.score - b.score ||
-    a.word.localeCompare(b.word);
-}
-
-let skip = 0;
-while (game.canPlay && skip < game.players.length) {
+while (game.canPlay) {
   const player = game.startMove();
   console.log();
   console.log(
     `Player: ${player.tray} (${player.name}, score: ${player.score})`);
   const turn = new Turn(game, player);
-  let plays = turn.possiblePlays;
-  plays.sort(comparePlays);
+  const plays = player.strategy.findPlays(turn);
 
   if (plays.length) {
     const play = plays.pop();
@@ -42,12 +35,8 @@ while (game.canPlay && skip < game.players.length) {
       ", score: " + play.score);
     console.log(play.match.toString());
     play.commit();
-    game.fillTray(player);
-    console.log(game.board.toString());
     game.endMove();
-    skip = 0;
-  } else {
-    skip++;
+    console.log(game.board.toString());
   }
 }
 

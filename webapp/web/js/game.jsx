@@ -94,7 +94,7 @@ class AutoPlayGameView extends GameView {
 
   ticker() {
     const game = this.state.game;
-    if (game.canPlay && this.skip < game.players.length) {
+    if (game.canPlay) {
       this.nextPlay();
       this.setState({
         game
