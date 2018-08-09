@@ -92,6 +92,7 @@ class AutoPlayGameView extends GameView {
       game.fillTray(player);
 
       game.sanityCheck();
+      game.touch();
       this.skip = 0;
     } else {
       this.skip++;

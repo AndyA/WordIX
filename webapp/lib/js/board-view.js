@@ -104,14 +104,14 @@ class BoardView {
   }
 
   playPath(path) {
-    const gen = this.board.nextGeneration();
+    this.board.touch();
     for (const x in path) {
       const node = path[x];
       const cell = this.cell(x, 0);
       if (!cell.tile) {
         cell.tile = node.tile;
         cell.tile.letter = node.letter;
-        cell.generation = gen;
+        cell.touch();
       }
     }
   }

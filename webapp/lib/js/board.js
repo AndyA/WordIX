@@ -4,20 +4,19 @@ const BoardView = require("./board-view")
 const Transform = require("./transform");
 const Generation = require("./mixin/generation");
 
-class Cell {
-  constructor(board, tile = null, special = []) {
-    this.board = board;
-    this.tile = tile;
-    this.special = special;
-    this.generation = null;
-  }
+class Cell extends MW.mix(Object)
+  .with(Generation) {
+    constructor(board, tile = null, special = []) {
+      super();
+      this.board = board;
+      this.tile = tile;
+      this.special = special;
+    }
 
-  get age() {
-    if (this.generation === null)
-      return null;
-    return this.board.generation - this.generation;
+    get age() {
+      return this.board.generation - this.generation;
+    }
   }
-}
 
 class Board extends MW.mix(Object)
   .with(Generation) {
