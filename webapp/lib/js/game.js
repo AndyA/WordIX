@@ -2,6 +2,7 @@ const _ = require("lodash")
 const MW = require("mixwith");
 
 const Player = require("./player")
+const HighestScore = require("./strategy/highest-score");
 const Generation = require("./mixin/generation");
 
 class Game extends MW.mix(Object)
@@ -25,9 +26,9 @@ class Game extends MW.mix(Object)
       let pl = [];
       for (let pn = 1; pn <= n; pn++) {
         let player = new Player({
-          name: "Player " + pn
+          name: "Player " + pn,
+          strategy: new HighestScore
         });
-        this.fillTray(player);
         pl.push(player);
       }
       return pl;
@@ -41,6 +42,9 @@ class Game extends MW.mix(Object)
         this.players = this._makePlayers(this.players);
       if (!_.isArray(this.players))
         throw new Error("players must be a number or an array of players");
+
+      for (const pl of this.players)
+        this.fillTray(pl);
     }
 
     get canPlay() {

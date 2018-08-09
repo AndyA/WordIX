@@ -55,6 +55,20 @@ class Play {
 
     this.turn.player.bumpScore(this.score);
   }
+
+  play() {
+    const game = this.turn.game;
+    const player = this.turn.player;
+
+    console.log("play: " + this.match);
+
+    this.commit();
+
+    game.fillTray(player);
+
+    game.sanityCheck();
+    game.touch();
+  }
 }
 
 module.exports = Play;

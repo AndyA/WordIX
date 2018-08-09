@@ -6,6 +6,8 @@ const Rules = require("rules");
 const Trie = require("trie");
 const Game = require("game");
 const Turn = require("turn");
+const Player = require("player");
+const HighestScore = require("strategy/highest-score");
 
 class TileView extends React.Component {
   render() {
@@ -82,17 +84,11 @@ class AutoPlayGameView extends GameView {
     const player = game.nextPlayer();
 
     const turn = new Turn(game, player);
-    let plays = turn.possiblePlays;
-    plays.sort(comparePlays);
+    const plays = player.strategy.findPlays(turn);
 
     if (plays.length) {
       const play = plays.pop();
-
-      play.commit();
-      game.fillTray(player);
-
-      game.sanityCheck();
-      game.touch();
+      play.play();
       this.skip = 0;
     } else {
       this.skip++;
@@ -120,11 +116,6 @@ const dict = fetch("/data/enable.txt")
   .then(resp => resp.text())
   .then(text => text.split(/\s+/));
 
-function comparePlays(a, b) {
-  return a.score - b.score ||
-    a.word.localeCompare(b.word);
-}
-
 Promise.all([dict, ready()])
   .then((args) => {
     const [words] = args;
@@ -138,9 +129,18 @@ Promise.all([dict, ready()])
     });
 
     function gameFactory() {
+      const players = [new Player({
+        name: "Player 1",
+        strategy: new HighestScore
+      }), new Player({
+        name: "Player 2",
+        strategy: new HighestScore
+      })];
+
       return new Game({
         trie,
-        rules
+        rules,
+        players
       });
     }
 
