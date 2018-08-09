@@ -54,6 +54,8 @@ class Game extends MW.mix(Object).with(Generation) {
     const p = this.players[this.next++];
     if (this.next == this.players.length)
       this.next = 0;
+      // Bump global generation
+      this.nextGeneration();
     return p;
   }
 
