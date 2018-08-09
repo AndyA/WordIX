@@ -3,11 +3,11 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-const Board = require("../../webapp/lib/js/board.js")
-import {
+const Board = require("../../webapp/lib/js/board.js");
+const {
   Tile,
   WildTile
-} from "../../webapp/lib/js/tile.js";
+} = require("../../webapp/lib/js/tile.js");
 
 describe("Board", () => {
   describe("Empty board", () => {

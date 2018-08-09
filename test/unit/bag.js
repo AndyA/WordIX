@@ -5,11 +5,12 @@ const expect = chai.expect;
 
 const math = require("mathjs");
 
-import Bag from "../../webapp/lib/js/bag.js";
-import {
+const Bag = require("../../webapp/lib/js/bag.js");
+
+const {
   Tile,
   WildTile
-} from "../../webapp/lib/js/tile.js";
+} = require("../../webapp/lib/js/tile.js");
 
 const tiles = {
   A: {
