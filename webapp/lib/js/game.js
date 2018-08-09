@@ -1,9 +1,13 @@
 const _ = require("lodash")
+const MW = require("mixwith");
 
 const Player = require("./player")
 
-class Game {
+const Generation = require("./mixin/generation");
+
+class Game extends MW.mix(Object).with(Generation) {
   constructor(opt) {
+    super();
     Object.assign(this, {
       players: 2,
       next: 0
