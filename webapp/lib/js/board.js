@@ -1,5 +1,8 @@
+const MW = require("mixwith");
+
 const BoardView = require("./board-view")
 const Transform = require("./transform");
+const Generation = require("./mixin/generation");
 
 class Cell {
   constructor(board, tile = null, special = []) {
@@ -16,14 +19,13 @@ class Cell {
   }
 }
 
-class Board {
+class Board extends MW.mix(Object).with(Generation) {
   constructor(opt) {
+    super();
     Object.assign(this, {
       width: 15,
       height: 15,
     }, opt);
-
-    this.generation = 0;
 
     if (!this.board)
       this.clear();
@@ -58,10 +60,6 @@ class Board {
 
   get free() {
     return this.size - this.used;
-  }
-
-  nextGeneration() {
-    return ++this.generation;
   }
 
   cell(x, y) {
