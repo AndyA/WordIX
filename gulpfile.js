@@ -20,7 +20,8 @@ const Q = require("q");
 const prettyHrtime = require("pretty-hrtime");
 const path = require("path");
 const YAML = require('yamljs');
-const browserSync = require('browser-sync').create();
+const browserSync = require('browser-sync')
+  .create();
 const mocha = require("gulp-mocha");
 const handlebars = require('gulp-handlebars');
 const defineModule = require('gulp-define-module');
@@ -46,16 +47,18 @@ gulp.task("browser-sync", function() {
   browserSync.init(appConfig.bs);
 
   gulp.watch([
-    "lib/**/*.pm",
-    "components/*/lib/**.pm",
-    "config.yml",
-  ]).on("change", function() {
-    setTimeout(browserSync.reload, 3000);
-  });
+      "lib/**/*.pm",
+      "components/*/lib/**.pm",
+      "config.yml",
+    ])
+    .on("change", function() {
+      setTimeout(browserSync.reload, 3000);
+    });
 
   gulp.watch([
-    "views/**/*.tt",
-  ]).on("change", browserSync.reload);
+      "views/**/*.tt",
+    ])
+    .on("change", browserSync.reload);
 });
 
 gulp.task("less", function() {
@@ -87,9 +90,10 @@ gulp.task("less", function() {
 });
 
 gulp.task("watchless", ["less"], function() {
-  var watchFiles = flatten(configFile, paths.less, paths.less_libs.map(function(dir) {
-    return path.join(dir, "**", "*.less")
-  }));
+  var watchFiles = flatten(configFile, paths.less, paths.less_libs.map(
+    function(dir) {
+      return path.join(dir, "**", "*.less")
+    }));
   gulp.watch(watchFiles, ["less"]);
 });
 
@@ -112,54 +116,55 @@ function makeBundler(watch, mode) {
   });
 
   src.pipe(through2.obj(function(file, enc, next) {
-    var bundler = browserify(file.path, {
-      debug: mode === "dev",
-      cache: {},
-      packageCache: {},
-      fullPaths: true,
-      paths: paths.js_libs
-    });
-
-    bundler.transform("babelify", {
-      presets: ["react", "env"]
-    });
-
-    if (mode === "live") {
-      bundler.transform("uglifyify", {
-        global: true
+      var bundler = browserify(file.path, {
+        debug: mode === "dev",
+        cache: {},
+        packageCache: {},
+        fullPaths: true,
+        paths: paths.js_libs
       });
-    }
 
-    var bundle = function() {
-      var startTime = process.hrtime();
-      log("Starting " + mode + " bundler for", colors.cyan(file.relative));
-      return bundler.bundle()
-        .on("error", log)
-        .on("end", function() {
-          var endTime = process.hrtime(startTime);
-          log("Finished " + mode + " bundler for", colors.cyan(file.relative),
-            "after", colors.magenta(prettyHrtime(endTime)));
-        })
-        .pipe(exorcist(path.join(paths.webroot, file.relative + ".map")))
-        .pipe(source(file.relative))
-        .pipe(gulp.dest(paths.webroot))
-        .pipe(browserSync.stream());
-
-    }
-
-    if (watch) {
-      bundler.plugin(watchify, {
-        ignoreWatch: true
+      bundler.transform("babelify", {
+        presets: ["react", "env"]
       });
-      bundler.on('update', bundle);
-    }
 
-    var def = Q.defer();
-    bundle().on("end", def.resolve.bind(def));
-    promises.push(def.promise);
+      if (mode === "live") {
+        bundler.transform("uglifyify", {
+          global: true
+        });
+      }
 
-    next(null, file);
-  }))
+      var bundle = function() {
+        var startTime = process.hrtime();
+        log("Starting " + mode + " bundler for", colors.cyan(file.relative));
+        return bundler.bundle()
+          .on("error", log)
+          .on("end", function() {
+            var endTime = process.hrtime(startTime);
+            log("Finished " + mode + " bundler for", colors.cyan(file.relative),
+              "after", colors.magenta(prettyHrtime(endTime)));
+          })
+          .pipe(exorcist(path.join(paths.webroot, file.relative + ".map")))
+          .pipe(source(file.relative))
+          .pipe(gulp.dest(paths.webroot))
+          .pipe(browserSync.stream());
+
+      }
+
+      if (watch) {
+        bundler.plugin(watchify, {
+          ignoreWatch: true
+        });
+        bundler.on('update', bundle);
+      }
+
+      var def = Q.defer();
+      bundle()
+        .on("end", def.resolve.bind(def));
+      promises.push(def.promise);
+
+      next(null, file);
+    }))
     .on("data", function() {})
     .on("end", function() {});
 
@@ -167,15 +172,17 @@ function makeBundler(watch, mode) {
 }
 
 gulp.task("unit", function() {
-  return gulp.src(paths.test).pipe(mocha({
-    reporter: "spec"
-  }));
+  return gulp.src(paths.test)
+    .pipe(mocha({
+      reporter: "spec"
+    }));
 });
 
 gulp.task('tdd', ["test"], function() {
-  var watchFiles = flatten("build/js/**/*.js", paths.test, paths.js_libs.map(function(dir) {
-    return path.join(dir, "**", "*.js")
-  }));
+  var watchFiles = flatten("build/js/**/*.js", paths.test, paths.js_libs.map(
+    function(dir) {
+      return path.join(dir, "**", "*.js")
+    }));
   return gulp.watch(watchFiles, ['test']);
 })
 
