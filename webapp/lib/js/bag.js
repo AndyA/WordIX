@@ -1,7 +1,10 @@
 const _ = require("lodash");
+const MW = require("mixwith");
+const Generation = require("./mixin/generation");
 
-class Bag {
+class Bag extends MW.mix(Object).with(Generation)  {
   constructor(tiles) {
+    super();
     this.tiles = tiles || [];
   }
 
@@ -10,10 +13,12 @@ class Bag {
   }
 
   add(...tiles) {
+    this.touch();
     Array.prototype.push.apply(this.tiles, _.flattenDeep(tiles));
   }
 
   pull(idx) {
+    this.touch();
     return _.pullAt(this.tiles, idx);
   }
 
