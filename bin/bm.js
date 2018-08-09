@@ -74,9 +74,7 @@ obs.observe({
 for (let seed = 1; seed < 5; seed++)
   runGame(seed);
 
-function runGame(seed, maxPlays) {
-
-  maxPlays = maxPlays || 1000;
+function runGame(seed, maxPlays = 1000) {
 
   patchRandom(seed);
 
