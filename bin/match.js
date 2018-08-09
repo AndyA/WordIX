@@ -14,7 +14,7 @@ let words = fs.readFileSync(WORDS)
 const trie = new Trie(words);
 
 for (const word of process.argv.slice(2)) {
-  const search = new Search(trie, makeView("", 20), word);
+  const search = new Search(trie, makeView("", 20), word.toUpperCase());
   const matches = search.matches();
   const words = matches.map(m => m.word)
     .sort((a, b) => {
