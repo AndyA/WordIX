@@ -168,7 +168,6 @@ function makeBundler(watch, mode) {
 
 gulp.task("unit", function() {
   return gulp.src(paths.test).pipe(mocha({
-    require: ["babel-core/register"],
     reporter: "spec"
   }));
 });
