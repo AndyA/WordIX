@@ -53,7 +53,7 @@ class Play {
     this._takeFromRack();
     this.view.playPath(this.path);
 
-    this.turn.player.score += this.score;
+    this.turn.player.bumpScore(this.score);
   }
 }
 

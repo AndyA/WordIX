@@ -9,7 +9,18 @@ class Player extends MW.mix(Object)
       super();
       Object.assign(this, {}, opt);
       this.tray = this.tray || new Bag;
-      this.score = 0;
+      this._score = 0;
+    }
+
+    get score() {
+      return this._score;
+    }
+
+    bumpScore(n) {
+      if (n) {
+        this.touch();
+        this._score += n;
+      }
     }
   }
 
