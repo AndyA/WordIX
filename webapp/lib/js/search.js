@@ -178,6 +178,7 @@ class Search {
     const x = sp.length;
     const view = sp.view;
 
+    // Skip over any existing tile
     if (view) {
       const max = view.maxX;
       if (x > max)
