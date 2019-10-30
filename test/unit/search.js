@@ -3,14 +3,13 @@
 var chai = require("chai");
 var expect = chai.expect;
 
-const Trie = require("../../webapp/lib/js/trie.js")
+const Trie = require("../../webapp/lib/js/trie.js");
 const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
 const Bag = require("../../webapp/lib/js/bag.js");
 const Board = require("../../webapp/lib/js/board.js");
 const Rules = require("../../webapp/lib/js/rules.js");
 const Search = require("../../webapp/lib/js/search.js");
-const makeTile = require("../../webapp/lib/js/tile.js")
-  .makeTile;
+const makeTile = require("../../webapp/lib/js/tile.js").makeTile;
 
 function groupWords(found) {
   let byWord = {};
@@ -28,16 +27,17 @@ function makeBoard(rules, spec) {
 
   let board = rules.makeBoard();
   if (board.width != width || board.height != height)
-    throw new Error(`Board size mismatch: ` +
-      `(${board.width} x ${board.height}) v (${width} x ${height})`)
+    throw new Error(
+      `Board size mismatch: ` +
+        `(${board.width} x ${board.height}) v (${width} x ${height})`
+    );
 
   for (const y in spec) {
     const row = spec[y];
     for (const x in row) {
       const lt = row[x];
       if (lt === " ") continue;
-      board.cell(x, y)
-        .tile = makeTile(lt, rules.letterScore(lt));
+      board.cell(x, y).tile = makeTile(lt, rules.letterScore(lt));
     }
   }
 
@@ -45,8 +45,7 @@ function makeBoard(rules, spec) {
 }
 
 function makeBag(rules, letters) {
-  return letters.split("")
-    .map(lt => makeTile(lt, rules.letterScore(lt)));
+  return letters.split("").map(lt => makeTile(lt, rules.letterScore(lt)));
 }
 
 function makeView(word, size) {
@@ -58,9 +57,7 @@ function makeView(word, size) {
   for (const x in word) {
     const lt = word[x];
     let cell = v.cell(x, 0);
-    if (lt !== "*")
-      v.cell(x, 0)
-      .tile = makeTile(lt);
+    if (lt !== "*") v.cell(x, 0).tile = makeTile(lt);
   }
   return v;
 }
@@ -68,81 +65,85 @@ function makeView(word, size) {
 describe("Search", () => {
   describe("matches", () => {
     describe("Simple", () => {
-      const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",
-        "FLOATER", "FLOATS"
+      const trie = new Trie([
+        "CAT",
+        "CATHARSIS",
+        "CATS",
+        "FLOAT",
+        "FLOATER",
+        "FLOATS"
       ]);
 
       function testMatches(bag, view, words) {
-        let sortedWords = words.slice()
-          .sort();
+        let sortedWords = words.slice().sort();
         const search = new Search(trie, view, bag);
         let found = search.matches();
         let byWord = groupWords(found);
 
-        const foundWords = Object.keys(byWord)
-          .sort();
+        const foundWords = Object.keys(byWord).sort();
 
         it("should match the right words", () => {
-          expect(foundWords)
-            .to.deep.equal(sortedWords);
+          expect(foundWords).to.deep.equal(sortedWords);
         });
 
         for (const word of sortedWords) {
           const matches = byWord[word] || [];
           for (const m of matches) {
-            it("should have used the correct tiles for " + m.word,
-              () => {
-                const pos = ArrayPicker.reverseIndex(m.path.map(x =>
-                  x.bagPos));
-                let letter = word.split("");
-                let want = [],
-                  got = [];
+            it("should have used the correct tiles for " + m.word, () => {
+              const pos = ArrayPicker.reverseIndex(m.path.map(x => x.bagPos));
+              let letter = word.split("");
+              let want = [],
+                got = [];
 
-                for (const bp of pos) {
-                  const lt = letter.shift();
-                  if (bp === undefined) continue;
-                  const bl = bag[bp];
-                  if (bl === "*") continue;
-                  want.push(lt);
-                  got.push(bag[bp]);
-                }
+              for (const bp of pos) {
+                const lt = letter.shift();
+                if (bp === undefined) continue;
+                const bl = bag[bp];
+                if (bl === "*") continue;
+                want.push(lt);
+                got.push(bag[bp]);
+              }
 
-                expect(got)
-                  .to.not.be.empty;
+              expect(got).to.not.be.empty;
 
-                expect(got)
-                  .to.deep.equal(want);
-              })
-
+              expect(got).to.deep.equal(want);
+            });
           }
         }
       }
 
       describe("No constraints", () => {
         const found = testMatches("FLOATERS", makeView("", 15), [
-          "FLOAT", "FLOATER",
+          "FLOAT",
+          "FLOATER",
           "FLOATS"
         ]);
       });
 
       describe("Wildcards", () => {
-        testMatches("**EFLRST", makeView("", 15), ["CAT",
+        testMatches("**EFLRST", makeView("", 15), [
+          "CAT",
           "CATS",
           "FLOAT",
-          "FLOATER", "FLOATS"
+          "FLOATER",
+          "FLOATS"
         ]);
       });
 
       describe("Constraints", () => {
-        testMatches("FLTERS", makeView("**OA", 15), ["FLOAT",
-          "FLOATER", "FLOATS"
+        testMatches("FLTERS", makeView("**OA", 15), [
+          "FLOAT",
+          "FLOATER",
+          "FLOATS"
         ]);
       });
 
       describe("Constraints and wildcards", () => {
-        testMatches("FLTER*",
-          makeView("**OA", 15), ["FLOAT", "FLOATER", "FLOATS"]
-        );
+        testMatches("FLTER*", makeView("**OA", 15), [
+          "FLOAT",
+          "FLOATER",
+          "FLOATS"
+        ]);
       });
     });
 
@@ -155,23 +156,24 @@ describe("Search", () => {
             height: 3
           });
           const v = board.view(0, 1, "across");
-          v.cell(0, 0)
-            .tile = makeTile("A");
-          v.cell(1, 0)
-            .tile = makeTile("B");
-          const bag = new Bag;
+          v.cell(0, 0).tile = makeTile("A");
+          v.cell(1, 0).tile = makeTile("B");
+          const bag = new Bag();
           bag.add(["A", "B"].map(makeTile));
-          const search = new Search(trie, board.view(0, 2,
-            "across"), bag.tiles);
+          const search = new Search(
+            trie,
+            board.view(0, 2, "across"),
+            bag.tiles
+          );
           const matches = search.matches();
-          expect(matches.map(m => m.word))
-            .to.deep.equal(["BA"])
+          expect(matches.map(m => m.word)).to.deep.equal(["BA"]);
         });
       });
     });
 
     describe("Scoring", () => {
-      const testCases = [{
+      const testCases = [
+        {
           board: [
             //123456789ABCDE
             "               ", // 0
@@ -188,7 +190,7 @@ describe("Search", () => {
             "               ", // B
             "               ", // C
             "               ", // D
-            "               ", // E
+            "               " // E
           ],
           bag: "QWERTIE",
           word: "QWERTIES",
@@ -215,8 +217,7 @@ describe("Search", () => {
             "CZAR  R        ", // B
             "      E        ", // C
             "    ENDLONG    ", // D
-            "               ", // E
-
+            "               " // E
           ],
           bag: "AE",
           word: "AE",
@@ -226,12 +227,12 @@ describe("Search", () => {
           dir: "down",
           score: [21],
           want: ["AE"]
-        },
+        }
       ];
 
       for (const tc of testCases) {
         it(`should score correctly (${tc.word})`, () => {
-          const rules = new Rules;
+          const rules = new Rules();
           const [b, r] = makeBoard(rules, tc.board);
           let dict = b.words(r.direction);
           dict.push(tc.word);
@@ -241,18 +242,16 @@ describe("Search", () => {
           const v = b.view(tc.x, tc.y, tc.dir);
           const search = new Search(trie, v, makeBag(rules, tc.bag));
           const match = search.matches();
-          expect(match.map(m => m.word))
-            .to.deep.equal(tc.want);
-          expect(match.map(m => m.score))
-            .to.deep.equal(tc.score);
+          expect(match.map(m => m.word)).to.deep.equal(tc.want);
+          expect(match.map(m => m.score)).to.deep.equal(tc.score);
         });
       }
-
     });
 
     describe("Bugs", () => {
       describe("Invalid cross plays", () => {
-        const testCases = [{
+        const testCases = [
+          {
             board: [
               "      M        ",
               "    TRICLAD    ",
@@ -308,7 +307,7 @@ describe("Search", () => {
 
         for (const tc of testCases) {
           it(`should play correctly (${tc.word})`, () => {
-            const [b, r] = makeBoard(new Rules, tc.board);
+            const [b, r] = makeBoard(new Rules(), tc.board);
             let dict = b.words(r.direction);
             dict.push(tc.word);
             Array.prototype.push.apply(dict, tc.extra || []);
@@ -317,13 +316,10 @@ describe("Search", () => {
             const v = b.view(tc.x, tc.y, tc.dir);
             const search = new Search(trie, v, tc.bag);
             const match = search.matches();
-            expect(match.map(m => m.word))
-              .to.deep.equal(tc.want);
+            expect(match.map(m => m.word)).to.deep.equal(tc.want);
           });
         }
       });
     });
-
   });
-
 });

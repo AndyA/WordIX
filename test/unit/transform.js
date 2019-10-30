@@ -3,7 +3,7 @@
 const chai = require("chai");
 const expect = chai.expect;
 
-const Transform = require("../../webapp/lib/js/transform.js")
+const Transform = require("../../webapp/lib/js/transform.js");
 
 const testPos = [
   [0, 0],
@@ -31,24 +31,22 @@ function offsetPairs(list, dx, dy) {
 function scale(list, sx, sy) {
   return list.map(xy => {
     const [x, y] = xy;
-    return [x * sx, y * sy]
+    return [x * sx, y * sy];
   });
 }
 
 function swapPairs(list) {
   return list.map(xy => {
     const [x, y] = xy;
-    return [y, x]
+    return [y, x];
   });
 }
 
 function testTransform(t, src, want) {
   const got = t.xys(src);
   // console.log({ src, want, got });
-  expect(got)
-    .to.deep.equal(want);
-  expect(t.inverse.xys(want))
-    .to.deep.equal(src);
+  expect(got).to.deep.equal(want);
+  expect(t.inverse.xys(want)).to.deep.equal(src);
 }
 
 describe("Transform", () => {
@@ -70,8 +68,7 @@ describe("Transform", () => {
     describe("origin", () => {
       const t = new Transform(3, 4, "across");
       it("should have the right origin", () => {
-        expect(t.origin)
-          .to.deep.equal([3, 4]);
+        expect(t.origin).to.deep.equal([3, 4]);
       });
       it("should offset coordinates", () => {
         testTransform(t, testPos, offsetPairs(testPos, 3, 4));
@@ -81,26 +78,21 @@ describe("Transform", () => {
     describe("flipped (constructor)", () => {
       const t = new Transform(7, 2, "down");
       it("should flip coordinates", () => {
-        testTransform(t, testPos, offsetPairs(swapPairs(testPos),
-          7, 2));
+        testTransform(t, testPos, offsetPairs(swapPairs(testPos), 7, 2));
       });
     });
 
     describe("flipped (version)", () => {
-      const t = new Transform(3, 4, "across")
-        .flipped;
+      const t = new Transform(3, 4, "across").flipped;
       it("should have the right origin", () => {
-        expect(t.origin)
-          .to.deep.equal([3, 4]);
+        expect(t.origin).to.deep.equal([3, 4]);
       });
       it("should flip coordinates", () => {
-        testTransform(t, testPos, offsetPairs(swapPairs(testPos),
-          3, 4));
+        testTransform(t, testPos, offsetPairs(swapPairs(testPos), 3, 4));
       });
     });
 
     describe("recentre", () => {
-
       it("should accumulate", () => {
         let t = new Transform(0, 0, "across");
         let o = [t.origin];
@@ -111,14 +103,7 @@ describe("Transform", () => {
             t = t.flipped;
           }
         }
-        expect(o)
-          .to.deep.equal([
-            [0, 0],
-            [10, 0],
-            [10, 10],
-            [0, 10],
-            [0, 0]
-          ])
+        expect(o).to.deep.equal([[0, 0], [10, 0], [10, 10], [0, 10], [0, 0]]);
       });
     });
   });

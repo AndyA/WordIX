@@ -25,22 +25,21 @@ function fillRange(n) {
 function collect(src, pick) {
   let out = [];
   let p = pick.slice();
-  while (p.length)
-    out.push(...src.splice(p.shift(), 1));
+  while (p.length) out.push(...src.splice(p.shift(), 1));
   return out;
 }
 
 function checkPick(original, idx, out, src) {
-  it("should pick " + JSON.stringify(idx) +
-    " from " + JSON.stringify(original), () => {
-      expect(out)
-        .to.deep.equal(idx);
-    });
+  it(
+    "should pick " + JSON.stringify(idx) + " from " + JSON.stringify(original),
+    () => {
+      expect(out).to.deep.equal(idx);
+    }
+  );
 
   const want = original.filter(x => idx.indexOf(x) < 0);
   it("should have left " + JSON.stringify(want), () => {
-    expect(src)
-      .to.deep.equal(want);
+    expect(src).to.deep.equal(want);
   });
 }
 

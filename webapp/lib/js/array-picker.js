@@ -1,7 +1,6 @@
 const _ = require("lodash");
 
 class ArrayPicker {
-
   static adjustIndex(idx) {
     let src = idx.slice();
     let out = [];
@@ -10,7 +9,7 @@ class ArrayPicker {
       const i = src.shift();
       out.push(i);
       if (i !== undefined && i !== null)
-        src = src.map(x => x > i ? x - 1 : x);
+        src = src.map(x => (x > i ? x - 1 : x));
     }
 
     return out;
@@ -28,9 +27,7 @@ class ArrayPicker {
         continue;
       }
       let cooked = raw;
-      for (const pos of step)
-        if (cooked >= pos)
-          cooked++;
+      for (const pos of step) if (cooked >= pos) cooked++;
       step.unshift(raw);
       out.push(cooked);
     }

@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var dbm;
 var type;
@@ -15,9 +15,9 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  return db.createTable('source', {
+  return db.createTable("source", {
     id: {
-      type: 'int',
+      type: "int",
       unsigned: true,
       notNull: true,
       primaryKey: true,
@@ -25,27 +25,27 @@ exports.up = function(db) {
       length: 10
     },
     parent: {
-      type: 'int',
+      type: "int",
       unsigned: true,
       notNull: false,
       length: 10
     },
     name: {
-      type: 'string',
+      type: "string",
       length: 30,
       notNull: true,
       unique: true
     },
     description: {
-      type: 'text'
+      type: "text"
     }
-  })
+  });
 };
 
 exports.down = function(db) {
-  return db.dropTable('source');
+  return db.dropTable("source");
 };
 
 exports._meta = {
-  "version": 1
+  version: 1
 };

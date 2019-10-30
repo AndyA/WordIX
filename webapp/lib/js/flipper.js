@@ -14,17 +14,15 @@ class Flipper {
 
   flip(args, func) {
     let work = [args];
-    for (const flip of this.flips)
-      work = this._flip(work, flip);
+    for (const flip of this.flips) work = this._flip(work, flip);
     let seen = {};
     for (const a of work) {
       const key = JSON.stringify(a);
       if (seen[key]) continue;
       seen[key] = true;
-      func(...a)
+      func(...a);
     }
   }
-
 }
 
 module.exports = Flipper;

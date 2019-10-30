@@ -1,7 +1,6 @@
 const _ = require("lodash");
 
-const makeTile = require("./tile")
-  .makeTile;
+const makeTile = require("./tile").makeTile;
 
 class SearchPath {
   constructor(view, nd, parent, step, length) {
@@ -28,10 +27,7 @@ class SearchPath {
     for (let x = this.length; x <= max; x++) {
       const tile = this.view.tile(x, 0);
       if (!tile) break;
-      const next = sp.advance({
-        tile,
-        letter: tile.letter
-      })
+      const next = sp.advance({ tile, letter: tile.letter });
       if (!next) break;
       sp = next;
     }
@@ -45,30 +41,32 @@ class SearchPath {
   }
 
   get terminal() {
-    return this.nd["*"] &&
-      (this.length > this.view.maxX || !this.view.tile(this.length, 0));
+    return (
+      this.nd["*"] &&
+      (this.length > this.view.maxX || !this.view.tile(this.length, 0))
+    );
   }
 
   get validLetters() {
-    return this._vl = this._vl || Object.keys(this.nd)
-      .filter(x => x !== "*")
-      .sort();
+    return (this._vl =
+      this._vl ||
+      Object.keys(this.nd)
+        .filter(x => x !== "*")
+        .sort());
   }
 
   flatten() {
     let path = this.parent ? this.parent.flatten() : [];
-    if (this.step)
-      path.push(this.step);
+    if (this.step) path.push(this.step);
     return path;
   }
 
   get path() {
-    return this._path = this._path || this.flatten();
+    return (this._path = this._path || this.flatten());
   }
 
   get word() {
-    return this._word = this._word || this.path.map(p => p.letter)
-      .join("");
+    return (this._word = this._word || this.path.map(p => p.letter).join(""));
   }
 
   // Gather score information for this match
@@ -105,15 +103,14 @@ class SearchPath {
 
       // Add scores for cross words
       const cross = path[x].cross;
-      if (cross)
-        crossScore += cross._calculateScore(depth + 1);
+      if (cross) crossScore += cross._calculateScore(depth + 1);
     }
 
     return score * wordMultiplier + crossScore;
   }
 
   get score() {
-    return this._score = this._score || this._calculateScore(0);
+    return (this._score = this._score || this._calculateScore(0));
   }
 
   toString() {
@@ -123,10 +120,11 @@ class SearchPath {
     for (const x in path) {
       const pe = path[x];
       const [cx, cy] = this.view.xy(x, 0);
-      desc.push(`[${cx}, ${cy}, ${pe.letter}, ` +
-        `${pe.bagPos === undefined ? "" : pe.bagPos}]`);
-      if (pe.cross)
-        cross.push(pe.cross.toString());
+      desc.push(
+        `[${cx}, ${cy}, ${pe.letter}, ` +
+          `${pe.bagPos === undefined ? "" : pe.bagPos}]`
+      );
+      if (pe.cross) cross.push(pe.cross.toString());
     }
     let rep = desc.join(", ");
     if (cross.length) rep += " cross: " + cross.join(", ");
@@ -143,33 +141,31 @@ class Search {
   }
 
   _tiles(obj) {
-    if (_.isString(obj))
-      return this._tiles(obj.split(""));
-    if (!_.isArray(obj))
-      throw new Error("Need a string or an array");
+    if (_.isString(obj)) return this._tiles(obj.split(""));
+    if (!_.isArray(obj)) throw new Error("Need a string or an array");
     return obj.map(x => makeTile(x));
   }
 
   _hasCrossWord(view, x) {
-    return (view.minY < 0 && view.tile(x, -1)) ||
-      (view.maxY > 0 && view.tile(x, 1));
+    return (
+      (view.minY < 0 && view.tile(x, -1)) || (view.maxY > 0 && view.tile(x, 1))
+    );
   }
 
   _makeCrossPath(view, x) {
-    if (!this._hasCrossWord(view, x))
-      return null;
+    if (!this._hasCrossWord(view, x)) return null;
 
-    const cv = view.recentre(x, 0)
+    const cv = view
+      .recentre(x, 0)
       .flip()
       .moveLeft();
-    return new SearchPath(cv, this.trie.root)
-      .skip();
+    return new SearchPath(cv, this.trie.root).skip();
   }
 
   _crossPath(x) {
     let cp = this._cp;
     if (cp.hasOwnProperty(x)) return cp[x];
-    return cp[x] = this._makeCrossPath(this.view, x);
+    return (cp[x] = this._makeCrossPath(this.view, x));
   }
 
   _match(sp, bag, cb) {
@@ -181,25 +177,19 @@ class Search {
     // Skip over any existing tile
     if (view) {
       const max = view.maxX;
-      if (x > max)
-        return;
+      if (x > max) return;
 
       if (x < max) {
         const tile = view.tile(x, 0);
         if (tile) {
-          this._match(sp.advance({
-              tile: tile,
-              letter: tile.letter
-            }),
-            bag, cb);
+          this._match(sp.advance({ tile: tile, letter: tile.letter }), bag, cb);
           return;
         }
       }
     }
 
     // Got a match?
-    if (sp.terminal)
-      cb(sp);
+    if (sp.terminal) cb(sp);
 
     // Check the bag
     let seen = {};
@@ -219,18 +209,11 @@ class Search {
       let nextBag = null; // lazily created
 
       for (let lt of letters) {
-        let nextTile = {
-          letter: lt,
-          tile,
-          bagPos
-        };
+        let nextTile = { letter: lt, tile, bagPos };
 
         // Match cross word
         if (cp) {
-          let ncp = cp.advanceAndSkip({
-            letter: lt,
-            tile
-          });
+          let ncp = cp.advanceAndSkip({ letter: lt, tile });
           if (!ncp || !ncp.terminal) continue;
           nextTile.cross = ncp;
         }
@@ -249,8 +232,7 @@ class Search {
   }
 
   match(cb) {
-    this._match(new SearchPath(this.view, this.trie.root),
-      this.bag, cb);
+    this._match(new SearchPath(this.view, this.trie.root), this.bag, cb);
   }
 
   matches() {

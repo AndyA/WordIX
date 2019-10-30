@@ -1,7 +1,6 @@
 const _ = require("lodash");
 
-const makeTile = require("./tile")
-  .makeTile;
+const makeTile = require("./tile").makeTile;
 
 class Trie {
   constructor(words, root = null) {
@@ -12,15 +11,15 @@ class Trie {
   _trieLevel(lo, hi, rank) {
     const words = this.words;
 
-    let prevLetter, prevPos = lo,
+    let prevLetter,
+      prevPos = lo,
       nd = {};
 
     for (let pos = lo; pos < hi; pos++) {
       const word = words[pos];
       if (rank <= word.length) {
         const letter = rank == word.length ? "*" : word[rank];
-        if (prevLetter === undefined)
-          prevLetter = letter;
+        if (prevLetter === undefined) prevLetter = letter;
         if (prevLetter !== letter) {
           if (letter < prevLetter && letter !== "*")
             throw new Error("Words must be sorted");
@@ -37,15 +36,13 @@ class Trie {
   }
 
   get root() {
-    return this._root = this._root ||
-      this._trieLevel(0, this.words.length, 0);
+    return (this._root =
+      this._root || this._trieLevel(0, this.words.length, 0));
   }
 
   _tiles(obj) {
-    if (_.isString(obj))
-      return this._tiles(obj.split(""));
-    if (!_.isArray(obj))
-      throw new Error("Need a string or an array");
+    if (_.isString(obj)) return this._tiles(obj.split(""));
+    if (!_.isArray(obj)) throw new Error("Need a string or an array");
     return obj.map(x => makeTile(x));
   }
 
@@ -73,7 +70,8 @@ class Trie {
 
     encodeNode(this.root);
 
-    return enc.join("")
+    return enc
+      .join("")
       .replace(/\*\./g, "*")
       .replace(/(\.+)/g, (m, p1) => p1.length);
   }
@@ -82,9 +80,9 @@ class Trie {
     let dots = ".";
     let pos = 0;
 
-    const exp = rep.replace(/(\d+)/g, (m, p1) => {
-        while (dots.length < p1)
-          dots = dots + dots;
+    const exp = rep
+      .replace(/(\d+)/g, (m, p1) => {
+        while (dots.length < p1) dots = dots + dots;
         return dots.substr(0, p1);
       })
       .replace(/\*/g, "*.");

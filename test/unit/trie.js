@@ -3,11 +3,10 @@
 const chai = require("chai");
 const expect = chai.expect;
 
-const Trie = require("../../webapp/lib/js/trie.js")
+const Trie = require("../../webapp/lib/js/trie.js");
 const ArrayPicker = require("../../webapp/lib/js/array-picker.js");
 const Board = require("../../webapp/lib/js/board.js");
-const makeTile = require("../../webapp/lib/js/tile.js")
-  .makeTile;
+const makeTile = require("../../webapp/lib/js/tile.js").makeTile;
 
 function randomWord() {
   const len = Math.floor(Math.random() * Math.random() * 15 + 2);
@@ -21,99 +20,68 @@ function randomWord() {
 
 function randomWords(count) {
   let words = [];
-  for (let i = 0; i < count; i++)
-    words.push(randomWord());
+  for (let i = 0; i < count; i++) words.push(randomWord());
   words.sort();
   return words;
 }
 
 describe("Trie", () => {
-  const trie = new Trie(["CAT", "CATHARSIS", "CATS", "FLOAT",
-    "FLOATER", "FLOATS"
+  const trie = new Trie([
+    "CAT",
+    "CATHARSIS",
+    "CATS",
+    "FLOAT",
+    "FLOATER",
+    "FLOATS"
   ]);
 
   describe("trie", () => {
     const want = {
-      "C": {
-        "A": {
-          "T": {
+      C: {
+        A: {
+          T: {
             "*": {},
-            "H": {
-              "A": {
-                "R": {
-                  "S": {
-                    "I": {
-                      "S": {
-                        "*": {}
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "S": {
-              "*": {}
-            }
+            H: { A: { R: { S: { I: { S: { "*": {} } } } } } },
+            S: { "*": {} }
           }
         }
       },
-      "F": {
-        "L": {
-          "O": {
-            "A": {
-              "T": {
-                "*": {},
-                "E": {
-                  "R": {
-                    "*": {}
-                  }
-                },
-                "S": {
-                  "*": {}
-                }
-              }
-            }
-          }
+      F: {
+        L: {
+          O: { A: { T: { "*": {}, E: { R: { "*": {} } }, S: { "*": {} } } } }
         }
       }
     };
 
     it("should have a valid trie", () => {
-      expect(trie.root)
-        .to.deep.equal(want);
+      expect(trie.root).to.deep.equal(want);
     });
   });
 
   describe("valid", () => {
     it("should know CATHARSIS is valid", () => {
-      expect(trie.valid("CATHARSIS"))
-        .to.equal(true);
+      expect(trie.valid("CATHARSIS")).to.equal(true);
     });
 
     it("should know CATHARSI is invalid", () => {
-      expect(trie.valid("CATHARSI"))
-        .to.equal(false);
+      expect(trie.valid("CATHARSI")).to.equal(false);
     });
 
     it("should know CATHARSISE is invalid", () => {
-      expect(trie.valid("CATHARSISE"))
-        .to.equal(false);
+      expect(trie.valid("CATHARSISE")).to.equal(false);
     });
 
     it("should know CATHETER is invalid", () => {
-      expect(trie.valid("CATHETER"))
-        .to.equal(false);
+      expect(trie.valid("CATHETER")).to.equal(false);
     });
   });
 
   describe("Exceptions", () => {
     it("should reject unordered words", () => {
       function outOfOrder() {
-        return new Trie(["AC", "AE", "AD"])
-          .root;
+        return new Trie(["AC", "AE", "AD"]).root;
       }
-      expect(outOfOrder)
-        .to.throw("sorted");
+      expect(outOfOrder).to.throw("sorted");
     });
   });
 
@@ -121,23 +89,10 @@ describe("Trie", () => {
     it("should ignore duplicates", () => {
       const trie = new Trie(["AAA", "AAA", "AAB", "AAC", "AAC"]);
       const want = {
-        "A": {
-          "A": {
-            "A": {
-              "*": {}
-            },
-            "B": {
-              "*": {}
-            },
-            "C": {
-              "*": {}
-            }
-          }
-        }
+        A: { A: { A: { "*": {} }, B: { "*": {} }, C: { "*": {} } } }
       };
 
-      expect(trie.root)
-        .to.deep.equal(want);
+      expect(trie.root).to.deep.equal(want);
     });
   });
 
@@ -147,9 +102,7 @@ describe("Trie", () => {
       const trie = new Trie(words);
       const rep = trie.encode();
       const clone = Trie.decode(rep);
-      expect(clone.root)
-        .to.deep.equal(trie.root);
+      expect(clone.root).to.deep.equal(trie.root);
     });
   });
-
 });

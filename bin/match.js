@@ -6,7 +6,8 @@ const fs = require("fs");
 
 const WORDS = "ref/enable2k.txt";
 
-let words = fs.readFileSync(WORDS)
+let words = fs
+  .readFileSync(WORDS)
   .toString()
   .split("\n")
   .filter(w => w.length);
@@ -16,12 +17,12 @@ const trie = new Trie(words);
 for (const word of process.argv.slice(2)) {
   const search = new Search(trie, makeView("", 20), word.toUpperCase());
   const matches = search.matches();
-  const words = matches.map(m => m.word)
+  const words = matches
+    .map(m => m.word)
     .sort((a, b) => {
       return a.length - b.length || a.localeCompare(b);
     });
-  for (const w of words)
-    console.log(w);
+  for (const w of words) console.log(w);
 }
 
 function makeView(word, size) {
@@ -33,9 +34,7 @@ function makeView(word, size) {
   for (const x in word) {
     const lt = word[x];
     let cell = v.cell(x, 0);
-    if (lt !== "*")
-      v.cell(x, 0)
-      .tile = makeTile(lt);
+    if (lt !== "*") v.cell(x, 0).tile = makeTile(lt);
   }
   return v;
 }

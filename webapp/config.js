@@ -1,17 +1,12 @@
 "use strict";
 
 const os = require("os");
-const merge = require('merge-deep');
+const merge = require("merge-deep");
 
 function getConfig() {
-  const defaultConfig = {
-    bs: {
-      proxy: "http://localhost:31792"
-    }
-  };
+  const defaultConfig = { bs: { proxy: "http://localhost:31792" } };
 
-  const perHostConfig = {
-  };
+  const perHostConfig = {};
 
   const host = os.hostname();
   if (perHostConfig.hasOwnProperty(host))
@@ -20,4 +15,3 @@ function getConfig() {
 }
 
 module.exports = exports = getConfig();
-

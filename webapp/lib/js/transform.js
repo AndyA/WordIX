@@ -1,5 +1,4 @@
-const Matrix = require("transformation-matrix-js")
-  .Matrix;
+const Matrix = require("transformation-matrix-js").Matrix;
 
 class Transform {
   static decodeDirection(dir) {
@@ -15,7 +14,7 @@ class Transform {
 
   constructor(cx, cy, dir) {
     if (cx === undefined) {
-      this.m = new Matrix;
+      this.m = new Matrix();
     } else if (cx instanceof Matrix) {
       this.m = cx;
     } else {
@@ -36,7 +35,7 @@ class Transform {
   xys(list) {
     return list.map(xy => {
       const [x, y] = xy;
-      return this.xy(x, y)
+      return this.xy(x, y);
     });
   }
 
@@ -49,15 +48,14 @@ class Transform {
   }
 
   get inverse() {
-    return this._inverse = this._inverse ||
-      new Transform(this.m.inverse());
+    return (this._inverse = this._inverse || new Transform(this.m.inverse()));
   }
 
   get flipped() {
     if (this._flipped) return this._flipped;
     let m = this.m.clone();
     m.transform(0, 1, 1, 0, 0, 0);
-    return this._flipped = new Transform(m);
+    return (this._flipped = new Transform(m));
   }
 }
 

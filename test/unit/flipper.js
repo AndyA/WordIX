@@ -3,28 +3,14 @@
 const chai = require("chai");
 const expect = chai.expect;
 
-const Flipper = require("../../webapp/lib/js/flipper.js")
+const Flipper = require("../../webapp/lib/js/flipper.js");
 
 const width = 15;
 const height = 15;
 
-const testCase = [{
-    name: "central",
-    args: [7, 7],
-    want: [
-      [7, 7]
-    ]
-  },
-  {
-    name: "corner",
-    args: [0, 0],
-    want: [
-      [0, 0],
-      [0, 14],
-      [14, 0],
-      [14, 14]
-    ]
-  },
+const testCase = [
+  { name: "central", args: [7, 7], want: [[7, 7]] },
+  { name: "corner", args: [0, 0], want: [[0, 0], [0, 14], [14, 0], [14, 14]] },
   {
     name: "random",
     args: [3, 2],
@@ -38,11 +24,10 @@ const testCase = [{
       [12, 3],
       [12, 11]
     ]
-  },
+  }
 ];
 
 describe("Flipper", () => {
-
   const flipper = new Flipper([
     (x, y) => [y, x],
     (x, y) => [width - 1 - x, y],
@@ -53,12 +38,9 @@ describe("Flipper", () => {
     it("should handle: " + tc.name, () => {
       var got = [];
       flipper.flip(tc.args, (...args) => {
-        got.push(args)
+        got.push(args);
       });
-      expect(got)
-        .to.deep.equal(tc.want);
+      expect(got).to.deep.equal(tc.want);
     });
   }
-
-
 });

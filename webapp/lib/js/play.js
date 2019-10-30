@@ -24,28 +24,23 @@ class Play {
   }
 
   get score() {
-    return this._score = this._score ||
-      this.match.score + this.rules.computeBonus(this);
+    return (this._score =
+      this._score || this.match.score + this.rules.computeBonus(this));
   }
 
   get novel() {
-    for (const i of this.match.path)
-      if (i.relBagPos !== undefined)
-        return true;
+    for (const i of this.match.path) if (i.relBagPos !== undefined) return true;
     return false;
-
   }
 
   get adjoined() {
     for (const i of this.match.path)
-      if (i.relBagPos === undefined || i.cross)
-        return true;
+      if (i.relBagPos === undefined || i.cross) return true;
     return false;
   }
 
   _takeFromRack() {
-    const pick = this.path.map(x => x.relBagPos)
-      .filter(x => x !== undefined);
+    const pick = this.path.map(x => x.relBagPos).filter(x => x !== undefined);
     return this.turn.player.tray.pull(pick);
   }
 

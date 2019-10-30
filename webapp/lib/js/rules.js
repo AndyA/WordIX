@@ -1,61 +1,26 @@
-const Board = require("./board")
-const Flipper = require("./flipper")
-const Bag = require("./bag")
+const Board = require("./board");
+const Flipper = require("./flipper");
+const Bag = require("./bag");
 
-const {
-  Tile,
-  WildTile
-} = require("./tile");
+const { Tile, WildTile } = require("./tile");
 
 const defaultRules = {
-  tray: {
-    size: 7
-  },
+  tray: { size: 7 },
   board: {
     width: 15,
     height: 15,
     flip: ["x", "y", "diag"],
-    direction: [
-      "across", "down"
-    ],
-    special: [{
-        multiplier: 2,
-        scope: "letter",
-        at: [
-          [3, 0],
-          [6, 2],
-          [7, 3],
-          [6, 6]
-        ]
-      },
-      {
-        multiplier: 3,
-        scope: "letter",
-        at: [
-          [5, 1],
-          [5, 5]
-        ]
-      },
+    direction: ["across", "down"],
+    special: [
+      { multiplier: 2, scope: "letter", at: [[3, 0], [6, 2], [7, 3], [6, 6]] },
+      { multiplier: 3, scope: "letter", at: [[5, 1], [5, 5]] },
       {
         multiplier: 2,
         scope: "word",
-        at: [
-          [1, 1],
-          [2, 2],
-          [3, 3],
-          [4, 4],
-          [7, 7]
-        ]
+        at: [[1, 1], [2, 2], [3, 3], [4, 4], [7, 7]]
       },
-      {
-        multiplier: 3,
-        scope: "word",
-        at: [
-          [0, 0],
-          [7, 0]
-        ]
-      },
-    ],
+      { multiplier: 3, scope: "word", at: [[0, 0], [7, 0]] }
+    ]
   },
   letters: {
     count: {
@@ -85,7 +50,7 @@ const defaultRules = {
       X: 1,
       Y: 2,
       Z: 1,
-      "*": 2,
+      "*": 2
     },
     score: {
       A: 1,
@@ -113,13 +78,11 @@ const defaultRules = {
       W: 4,
       X: 8,
       Y: 4,
-      Z: 10,
-    },
+      Z: 10
+    }
   },
-  bonus: {
-    7: 50
-  }
-}
+  bonus: { 7: 50 }
+};
 
 class Rules {
   constructor(rules) {
@@ -135,8 +98,7 @@ class Rules {
   }
 
   get flipper() {
-    if (this._flipper)
-      return this._flipper;
+    if (this._flipper) return this._flipper;
 
     const br = this.rules.board;
 
@@ -157,26 +119,20 @@ class Rules {
       }
     }
 
-    return this._flipper = new Flipper(flip);
+    return (this._flipper = new Flipper(flip));
   }
 
   makeBoard() {
     const br = this.rules.board;
 
-    var b = new Board({
-      width: br.width,
-      height: br.height
-    });
+    var b = new Board({ width: br.width, height: br.height });
 
     // Add special cells
     for (const sp of br.special) {
       for (const at of sp.at) {
         this.flipper.flip(at, (x, y) => {
           var c = b.cell(x, y);
-          c.special.push({
-            scope: sp.scope,
-            multiplier: sp.multiplier
-          });
+          c.special.push({ scope: sp.scope, multiplier: sp.multiplier });
         });
       }
     }
@@ -189,10 +145,8 @@ class Rules {
     let pile = [];
     for (const lt of Object.keys(lr.count)) {
       for (let i = 0; i < lr.count[lt]; i++) {
-        if (lt === "*")
-          pile.push(new WildTile);
-        else
-          pile.push(new Tile(lt, lr.score[lt]));
+        if (lt === "*") pile.push(new WildTile());
+        else pile.push(new Tile(lt, lr.score[lt]));
       }
     }
 
@@ -208,13 +162,11 @@ class Rules {
     const directions = this.direction;
 
     function sendCell(x, y, dir) {
-      if (x < 0 || y < 0 || directions.indexOf(dir) < 0)
-        return;
+      if (x < 0 || y < 0 || directions.indexOf(dir) < 0) return;
 
       if (board.used) {
         const v = board.view(x, y, dir);
-        if (!v.wouldTouch(len))
-          return;
+        if (!v.wouldTouch(len)) return;
       }
 
       cb(x, y, dir);
@@ -241,10 +193,8 @@ class Rules {
   }
 
   validPlay(board, play) {
-    if (!play.novel)
-      return false;
-    if (board.used)
-      return play.adjoined;
+    if (!play.novel) return false;
+    if (board.used) return play.adjoined;
 
     // First move, has to cover cx, cy
     const [cx, cy] = board.centre;
@@ -258,7 +208,7 @@ class Rules {
 
   computeBonus(play) {
     const played = play.path.length;
-    return (this.rules.bonus[played] || 0);
+    return this.rules.bonus[played] || 0;
   }
 }
 

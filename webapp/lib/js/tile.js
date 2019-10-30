@@ -7,8 +7,7 @@ class Tile {
   }
 
   set letter(lt) {
-    if (lt !== this.lt)
-      throw new Error("Can't reassign a regular tile");
+    if (lt !== this.lt) throw new Error("Can't reassign a regular tile");
   }
 
   get letter() {
@@ -47,18 +46,12 @@ class WildTile extends Tile {
 }
 
 function makeTile(letter, score) {
-  if (letter === undefined || letter === null)
-    return;
+  if (letter === undefined || letter === null) return;
   if (_.isString(letter)) {
-    if (letter === "*")
-      return new WildTile;
+    if (letter === "*") return new WildTile();
     return new Tile(letter, score);
   }
   return letter; // assume it's a tile
 }
 
-module.exports = {
-  Tile,
-  WildTile,
-  makeTile
-};
+module.exports = { Tile, WildTile, makeTile };

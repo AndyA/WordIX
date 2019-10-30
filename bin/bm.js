@@ -6,10 +6,7 @@ const Turn = require("../webapp/lib/js/turn");
 
 const _ = require("lodash");
 
-const {
-  performance,
-  PerformanceObserver
-} = require('perf_hooks');
+const { performance, PerformanceObserver } = require("perf_hooks");
 
 const patchRandom = require("../webapp/test/js/patch-random");
 
@@ -39,7 +36,8 @@ const fs = require("fs");
 
 const WORDS = "ref/enable1.txt";
 
-let words = fs.readFileSync(WORDS)
+let words = fs
+  .readFileSync(WORDS)
   .toString()
   .split("\n")
   .filter(w => w.length);
@@ -56,8 +54,7 @@ patchFunction(Search.prototype, "match", e => {
   const search = e[0];
   return [
     decodeView(search.view),
-    search.bag.map(x => x.toString())
-    .join("")
+    search.bag.map(x => x.toString()).join("")
   ].join("; ");
 });
 
@@ -67,15 +64,13 @@ const obs = new PerformanceObserver(list => {
 });
 
 obs.observe({
-  entryTypes: ['function'],
+  entryTypes: ["function"],
   buffered: true
 });
 
-for (let seed = 1; seed < 5; seed++)
-  runGame(seed);
+for (let seed = 1; seed < 5; seed++) runGame(seed);
 
 function runGame(seed, maxPlays = 1000) {
-
   patchRandom(seed);
 
   const game = new Game({
@@ -84,20 +79,28 @@ function runGame(seed, maxPlays = 1000) {
   });
 
   while (game.canPlay) {
-    if (--maxPlays < 0)
-      break;
+    if (--maxPlays < 0) break;
     const player = game.startMove();
     console.log();
     console.log(
-      `Player: ${player.tray} (${player.name}, score: ${player.score})`);
+      `Player: ${player.tray} (${player.name}, score: ${player.score})`
+    );
     const turn = new Turn(game, player);
     let plays = turn.possiblePlays;
     plays.sort(comparePlays);
 
     if (plays.length) {
       const play = plays.pop();
-      console.log("word: " + play.word + ", origin: " + play.view.origin +
-        ", score: " + play.score + ", adjoined: " + play.adjoined);
+      console.log(
+        "word: " +
+          play.word +
+          ", origin: " +
+          play.view.origin +
+          ", score: " +
+          play.score +
+          ", adjoined: " +
+          play.adjoined
+      );
       console.log(play.match.toString());
       play.commit();
       game.fillTray(player);
@@ -107,8 +110,7 @@ function runGame(seed, maxPlays = 1000) {
   }
 
   console.log();
-  console.log("Final words: " + game.words.sort()
-    .join(", "));
+  console.log("Final words: " + game.words.sort().join(", "));
 
   for (const player of game.players) {
     console.log(`${player.score} - ${player.name}`);
@@ -116,10 +118,8 @@ function runGame(seed, maxPlays = 1000) {
 }
 
 function decodeDirection(dx, dy) {
-  if (dx === 1 && dy === 0)
-    return "across";
-  if (dx === 0 && dy === 1)
-    return "down";
+  if (dx === 1 && dy === 0) return "across";
+  if (dx === 0 && dy === 1) return "down";
   return `unknown[${dx}, ${dy}]`;
 }
 
@@ -130,16 +130,13 @@ function decodeView(v) {
 }
 
 function _s(v) {
-  if (v === undefined)
-    return "undefined";
-  if (v === null)
-    return "null";
+  if (v === undefined) return "undefined";
+  if (v === null) return "null";
   return "" + v;
 }
 
 function comparePlays(a, b) {
-  return a.score - b.score ||
-    a.word.localeCompare(b.word);
+  return a.score - b.score || a.word.localeCompare(b.word);
 }
 
 function patchFunction(obj, funcName, dispFunc) {
@@ -160,8 +157,8 @@ function patchFunction(obj, funcName, dispFunc) {
     // Add dispFunc and this to every call
     args.unshift(dispFunc);
     args.unshift(this);
-    return shim.apply(this, args)
-  }
+    return shim.apply(this, args);
+  };
 }
 
 function formatEntry(e) {
@@ -170,13 +167,11 @@ function formatEntry(e) {
 }
 
 function analyseEntries(list) {
-  if (!list.length)
-    return;
+  if (!list.length) return;
 
-  let sortedList = list.slice()
-    .sort((a, b) => {
-      return a.duration - b.duration || a.startTime - b.startTime
-    });
+  let sortedList = list.slice().sort((a, b) => {
+    return a.duration - b.duration || a.startTime - b.startTime;
+  });
 
   const duration = sortedList.map(e => e.duration);
   const calls = duration.length;
@@ -201,8 +196,7 @@ function analyseEntries(list) {
 function analysePerformance(list) {
   const entries = _.groupBy(list.getEntries(), e => e.name);
 
-  let kind = Object.keys(entries)
-    .sort();
+  let kind = Object.keys(entries).sort();
   for (const k of kind) {
     analyseEntries(entries[k]);
   }
